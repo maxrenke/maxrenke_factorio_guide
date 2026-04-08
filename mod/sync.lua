@@ -37,7 +37,7 @@ function sync.write_progress(player_index)
   table.insert(lines, '}')
 
   local json_str = table.concat(lines, '\n')
-  game.write_file("guide_progress.json", json_str, false)
+  helpers.write_file("guide_progress.json", json_str, false)
   player.print("[Guide] Progress exported to script-output/guide_progress.json")
 end
 

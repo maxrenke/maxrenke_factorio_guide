@@ -44,16 +44,28 @@ function gui.create_guide_frame(player)
 
   -- Root frame
   local frame = player.gui.screen.add{
-    type     = "frame",
-    name     = "guide_tracker_frame",
-    caption  = "First Run Guide - Vanilla Rocket Launch",
+    type      = "frame",
+    name      = "guide_tracker_frame",
     direction = "vertical",
   }
   frame.style.minimal_width  = 460
-  frame.style.maximal_width  = 460
-  frame.style.minimal_height = 600
-  frame.style.maximal_height = 720
-  frame.location = { x = 50, y = 100 }
+  frame.style.minimal_height = 400
+  frame.location = { x = 50, y = 60 }
+  frame.auto_center = false
+
+  -- Title bar (draggable)
+  local titlebar = frame.add{ type = "flow", direction = "horizontal", drag_target = frame }
+  titlebar.style.horizontally_stretchable = true
+  titlebar.style.height = 28
+  titlebar.drag_target = frame
+
+  local title = titlebar.add{
+    type    = "label",
+    caption = "First Run Guide - Vanilla Rocket Launch",
+    ignored_by_interaction = true,
+  }
+  title.style.font = "default-bold"
+  title.style.horizontally_stretchable = true
 
   -- Top bar: progress label + close button
   local topbar = frame.add{ type = "flow", direction = "horizontal" }
@@ -84,7 +96,7 @@ function gui.create_guide_frame(player)
   }
   scroll.style.horizontally_stretchable = true
   scroll.style.vertically_stretchable   = true
-  scroll.style.maximal_height           = 590
+  scroll.style.minimal_height           = 300
 
   local expanded = pdata.expanded_phases or {}
 
