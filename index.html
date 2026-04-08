@@ -1,0 +1,2620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factorio First Playthrough Guide - Vanilla Rocket Launch</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg-dark: #1a1a1e;
+    --bg-card: #24242a;
+    --bg-card2: #2c2c34;
+    --bg-sidebar: #1e1e24;
+    --border: #3a3a46;
+    --text-primary: #e8e8f0;
+    --text-secondary: #9090a8;
+    --text-muted: #606078;
+    --orange: #e87c30;
+    --orange-light: #f09048;
+    --orange-dim: #5a3010;
+    --yellow: #f0c040;
+    --yellow-dim: #4a3a10;
+    --green: #50c878;
+    --green-dim: #0f3a1e;
+    --blue: #4a9eff;
+    --blue-dim: #0f2a4a;
+    --red: #e84040;
+    --red-dim: #3a0f0f;
+    --purple: #b070e0;
+    --sidebar-width: 280px;
+    --topbar-height: 56px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    display: flex;
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ===== TOPBAR ===== */
+  #topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--topbar-height);
+    background: #111116;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    gap: 20px;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+
+  #topbar-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  #topbar-title span {
+    color: var(--yellow);
+  }
+
+  #progress-wrapper {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  #progress-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    letter-spacing: 0.5px;
+  }
+
+  #progress-bar-track {
+    height: 8px;
+    background: var(--bg-card2);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  #progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--yellow));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  #menu-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  /* ===== SIDEBAR ===== */
+  #sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: var(--topbar-height);
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 16px 0;
+    z-index: 90;
+    transition: transform 0.3s ease;
+  }
+
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: transparent; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  #sidebar h3 {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    padding: 0 20px 8px;
+    text-transform: uppercase;
+  }
+
+  .sidebar-phase {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .sidebar-phase:hover {
+    background: rgba(232, 124, 48, 0.08);
+    color: var(--text-primary);
+    border-left-color: var(--border);
+  }
+
+  .sidebar-phase.active {
+    background: rgba(232, 124, 48, 0.12);
+    color: var(--orange-light);
+    border-left-color: var(--orange);
+  }
+
+  .sidebar-phase.completed {
+    color: var(--green);
+  }
+
+  .sidebar-phase.completed .phase-num {
+    background: var(--green);
+    color: #000;
+  }
+
+  .phase-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--bg-card2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .sidebar-phase.active .phase-num {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: #000;
+  }
+
+  .phase-label {
+    line-height: 1.2;
+  }
+
+  .sidebar-check {
+    margin-left: auto;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  #main {
+    margin-left: var(--sidebar-width);
+    margin-top: var(--topbar-height);
+    flex: 1;
+    padding: 32px 40px 80px;
+    max-width: 900px;
+  }
+
+  /* ===== INTRO HERO ===== */
+  #intro {
+    background: linear-gradient(135deg, #1e1810 0%, #2a1e10 50%, #1a1a1e 100%);
+    border: 1px solid var(--orange-dim);
+    border-radius: 12px;
+    padding: 32px;
+    margin-bottom: 40px;
+  }
+
+  #intro h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+
+  #intro h1 span { color: var(--yellow); }
+
+  #intro p {
+    color: var(--text-secondary);
+    max-width: 680px;
+    margin-bottom: 20px;
+  }
+
+  .intro-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+
+  .tag-orange { color: var(--orange); border-color: var(--orange-dim); background: rgba(232,124,48,0.1); }
+  .tag-green { color: var(--green); border-color: var(--green-dim); background: rgba(80,200,120,0.1); }
+  .tag-blue { color: var(--blue); border-color: var(--blue-dim); background: rgba(74,158,255,0.1); }
+
+  /* ===== PHASE CARDS ===== */
+  .phase-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 32px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    scroll-margin-top: calc(var(--topbar-height) + 16px);
+  }
+
+  .phase-card.completed {
+    border-color: rgba(80, 200, 120, 0.3);
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--bg-card2);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .phase-header:hover { background: #323240; }
+
+  .phase-badge {
+    font-size: 10px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .phase-title-block { flex: 1; }
+
+  .phase-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .phase-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .phase-status-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .phase-card.completed .phase-status-badge {
+    color: var(--green);
+    border-color: var(--green-dim);
+    background: var(--green-dim);
+  }
+
+  .phase-collapse-icon {
+    color: var(--text-muted);
+    font-size: 14px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .phase-card.collapsed .phase-collapse-icon { transform: rotate(-90deg); }
+
+  .phase-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .phase-card.collapsed .phase-body { display: none; }
+
+  /* WHY THIS MATTERS */
+  .why-block {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: rgba(240, 192, 64, 0.06);
+    border: 1px solid var(--yellow-dim);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+
+  .why-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .why-text { font-size: 14px; color: var(--text-secondary); }
+
+  .why-text strong { color: var(--yellow); }
+
+  /* GOAL BANNER */
+  .goal-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(232, 124, 48, 0.08);
+    border: 1px solid var(--orange-dim);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .goal-banner strong { color: var(--orange); }
+
+  /* SECTION HEADERS */
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* CHECKLISTS */
+  .checklist {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .checklist-item:hover {
+    background: rgba(255,255,255,0.03);
+    border-color: var(--border);
+  }
+
+  .checklist-item.checked {
+    background: rgba(80, 200, 120, 0.06);
+    border-color: rgba(80, 200, 120, 0.2);
+  }
+
+  .checklist-item.checked .task-text {
+    color: var(--text-muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--text-muted);
+  }
+
+  .task-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.15s;
+    background: var(--bg-dark);
+  }
+
+  .checklist-item.checked .task-checkbox {
+    background: var(--green);
+    border-color: var(--green);
+    color: #000;
+    font-size: 11px;
+  }
+
+  .task-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    flex: 1;
+    line-height: 1.5;
+  }
+
+  .task-text code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--bg-dark);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--orange-light);
+  }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .callout-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .callout-trap {
+    background: rgba(232, 64, 64, 0.08);
+    border: 1px solid rgba(232, 64, 64, 0.3);
+    color: var(--text-secondary);
+  }
+
+  .callout-trap .callout-label { color: var(--red); font-weight: 700; font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+  .callout-tip {
+    background: rgba(74, 158, 255, 0.08);
+    border: 1px solid rgba(74, 158, 255, 0.25);
+    color: var(--text-secondary);
+  }
+
+  .callout-tip .callout-label { color: var(--blue); font-weight: 700; font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+  .callout-ratio {
+    background: rgba(80, 200, 120, 0.08);
+    border: 1px solid rgba(80, 200, 120, 0.25);
+    color: var(--text-secondary);
+  }
+
+  .callout-ratio .callout-label { color: var(--green); font-weight: 700; font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase; display: block; margin-bottom: 4px; }
+
+  .callout-ratio code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
+  }
+
+  .callout-tip code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--bg-dark);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--blue);
+  }
+
+  /* COLUMNS LAYOUT */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* RECIPE BLOCKS */
+  .recipe-block {
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .recipe-block .recipe-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+  }
+
+  .recipe-block ul {
+    list-style: none;
+    color: var(--text-secondary);
+  }
+
+  .recipe-block ul li::before { content: '- '; color: var(--text-muted); }
+
+  .recipe-block ul li { line-height: 1.6; }
+
+  /* PHASE COMPLETE BUTTON */
+  .phase-complete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-dark);
+    color: var(--text-secondary);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    align-self: flex-start;
+  }
+
+  .phase-complete-btn:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-dim);
+  }
+
+  .phase-card.completed .phase-complete-btn {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-dim);
+  }
+
+  /* KEYBOARD SHORTCUT BLOCK */
+  .shortcut-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+
+  .shortcut-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  kbd {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    padding: 2px 7px;
+    color: var(--orange-light);
+    white-space: nowrap;
+  }
+
+  /* MILESTONE BANNER */
+  .milestone {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(90deg, rgba(232,124,48,0.15), transparent);
+    border-left: 3px solid var(--orange);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.open { transform: translateX(0); }
+    #main { margin-left: 0; padding: 24px 20px 60px; }
+    #menu-toggle { display: block; }
+    .two-col { grid-template-columns: 1fr; }
+    #topbar-title { font-size: 14px; }
+  }
+
+  @media (max-width: 600px) {
+    #main { padding: 16px 14px 60px; }
+    .phase-body { padding: 16px; }
+    .phase-header { padding: 14px 16px; }
+    #intro { padding: 20px; }
+    #intro h1 { font-size: 20px; }
+  }
+
+  /* IMPORT FROM MOD BUTTON */
+  #import-mod-btn {
+    background: rgba(74, 158, 255, 0.12);
+    border: 1px solid rgba(74, 158, 255, 0.35);
+    color: var(--blue);
+    padding: 5px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  #import-mod-btn:hover {
+    background: rgba(74, 158, 255, 0.22);
+    border-color: rgba(74, 158, 255, 0.6);
+  }
+
+  /* IMPORT MODAL */
+  #import-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.72);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  #import-modal-overlay.visible {
+    display: flex;
+  }
+  #import-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+  }
+  #import-modal h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 12px;
+  }
+  #import-modal p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  #import-modal p code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: var(--orange-light);
+  }
+  #import-file-input {
+    display: block;
+    width: 100%;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: var(--text-primary);
+  }
+  #import-result {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    min-height: 20px;
+    color: var(--green);
+  }
+  #import-result.error { color: var(--red); }
+  .import-modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .import-modal-buttons button {
+    padding: 7px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid var(--border);
+    background: var(--bg-card2);
+    color: var(--text-primary);
+    transition: background 0.15s;
+  }
+  .import-modal-buttons button:hover { background: #3a3a46; }
+  .import-modal-buttons button.primary {
+    background: rgba(74, 158, 255, 0.18);
+    border-color: rgba(74, 158, 255, 0.4);
+    color: var(--blue);
+  }
+  .import-modal-buttons button.primary:hover {
+    background: rgba(74, 158, 255, 0.3);
+  }
+
+  /* OVERLAY for mobile sidebar */
+  #sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 85;
+  }
+
+  #sidebar-overlay.visible { display: block; }
+
+  /* FOOTER */
+  #footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 24px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  /* Divider */
+  hr.section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 4px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <button id="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
+  <div id="topbar-title">Factorio <span>Rocket Guide</span></div>
+  <div id="progress-wrapper">
+    <div id="progress-label">
+      <span>OVERALL PROGRESS</span>
+      <span id="progress-pct">0%</span>
+    </div>
+    <div id="progress-bar-track">
+      <div id="progress-bar-fill"></div>
+    </div>
+  </div>
+  <button id="import-mod-btn" onclick="openImportModal()">Import from Mod</button>
+</div>
+
+<!-- IMPORT FROM MOD MODAL -->
+<div id="import-modal-overlay" onclick="closeImportModalOnOverlay(event)">
+  <div id="import-modal">
+    <h2>Import from Mod</h2>
+    <p>
+      1. In-game, open the <strong>Guide</strong> panel and click <strong>Export Progress</strong>.<br>
+      2. The file is saved to:<br>
+      <code>%AppData%\Roaming\Factorio\script-output\guide_progress.json</code><br>
+      3. Select that file below to sync all completed tasks.
+    </p>
+    <input type="file" id="import-file-input" accept=".json">
+    <div id="import-result"></div>
+    <div class="import-modal-buttons">
+      <button onclick="closeImportModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <h3>Phases</h3>
+  <a class="sidebar-phase" href="#phase-1" onclick="closeSidebar()">
+    <div class="phase-num">1</div>
+    <div class="phase-label">First Steps</div>
+    <span class="sidebar-check" id="sc-1"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-2" onclick="closeSidebar()">
+    <div class="phase-num">2</div>
+    <div class="phase-label">First Power &amp; Red Science</div>
+    <span class="sidebar-check" id="sc-2"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-3" onclick="closeSidebar()">
+    <div class="phase-num">3</div>
+    <div class="phase-label">Automation</div>
+    <span class="sidebar-check" id="sc-3"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-4" onclick="closeSidebar()">
+    <div class="phase-num">4</div>
+    <div class="phase-label">Smelting &amp; Bus Foundation</div>
+    <span class="sidebar-check" id="sc-4"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-5" onclick="closeSidebar()">
+    <div class="phase-num">5</div>
+    <div class="phase-label">Military Science</div>
+    <span class="sidebar-check" id="sc-5"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-6" onclick="closeSidebar()">
+    <div class="phase-num">6</div>
+    <div class="phase-label">Oil &amp; Blue Science</div>
+    <span class="sidebar-check" id="sc-6"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-7" onclick="closeSidebar()">
+    <div class="phase-num">7</div>
+    <div class="phase-label">Construction Robots</div>
+    <span class="sidebar-check" id="sc-7"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-8" onclick="closeSidebar()">
+    <div class="phase-num">8</div>
+    <div class="phase-label">Solar Power</div>
+    <span class="sidebar-check" id="sc-8"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-9" onclick="closeSidebar()">
+    <div class="phase-num">9</div>
+    <div class="phase-label">Yellow Science</div>
+    <span class="sidebar-check" id="sc-9"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-10" onclick="closeSidebar()">
+    <div class="phase-num">10</div>
+    <div class="phase-label">Power Armor &amp; Logistics</div>
+    <span class="sidebar-check" id="sc-10"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-11" onclick="closeSidebar()">
+    <div class="phase-num">11</div>
+    <div class="phase-label">Nuclear Power</div>
+    <span class="sidebar-check" id="sc-11"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-12" onclick="closeSidebar()">
+    <div class="phase-num">12</div>
+    <div class="phase-label">Purple Science</div>
+    <span class="sidebar-check" id="sc-12"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-13" onclick="closeSidebar()">
+    <div class="phase-num">13</div>
+    <div class="phase-label">Modules &amp; Beacons</div>
+    <span class="sidebar-check" id="sc-13"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-14" onclick="closeSidebar()">
+    <div class="phase-num">14</div>
+    <div class="phase-label">Rocket Components</div>
+    <span class="sidebar-check" id="sc-14"></span>
+  </a>
+  <a class="sidebar-phase" href="#phase-15" onclick="closeSidebar()">
+    <div class="phase-num">15</div>
+    <div class="phase-label">Launch the Rocket!</div>
+    <span class="sidebar-check" id="sc-15"></span>
+  </a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+  <!-- INTRO -->
+  <div id="intro">
+    <h1>Factorio <span>Vanilla Rocket Launch</span> Guide</h1>
+    <p>Your complete reference for a first playthrough - from crash landing to rocket launch. Covers all 15 phases of progression on the Space Age patch (v2.x), vanilla only. No DLC content.</p>
+    <div class="intro-tags">
+      <span class="tag tag-orange">Vanilla Only</span>
+      <span class="tag tag-orange">Space Age Patch v2.x</span>
+      <span class="tag tag-green">Beginner Friendly</span>
+      <span class="tag tag-blue">Main Bus Approach</span>
+      <span class="tag tag-green">15 Phases</span>
+    </div>
+  </div>
+
+  <!-- KEYBOARD SHORTCUTS QUICK REF -->
+  <div class="phase-card" id="shortcuts-card">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Quick Ref</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Essential Keyboard Shortcuts</div>
+        <div class="phase-subtitle">Learn these before anything else</div>
+      </div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+      <div class="shortcut-grid">
+        <div class="shortcut-item"><kbd>Alt</kbd> Toggle resource overlays</div>
+        <div class="shortcut-item"><kbd>Ctrl + LClick</kbd> Auto-take item</div>
+        <div class="shortcut-item"><kbd>Shift + LClick</kbd> Craft max quantity</div>
+        <div class="shortcut-item"><kbd>Shift + RClick</kbd> Copy recipe</div>
+        <div class="shortcut-item"><kbd>Shift + LClick</kbd> Paste recipe</div>
+        <div class="shortcut-item"><kbd>Z</kbd> Quick-insert 1 item</div>
+        <div class="shortcut-item"><kbd>Ctrl + RClick</kbd> Insert half stack</div>
+        <div class="shortcut-item"><kbd>R</kbd> Rotate building</div>
+        <div class="shortcut-item"><kbd>Q</kbd> Pick item under cursor</div>
+        <div class="shortcut-item"><kbd>Ctrl + C</kbd> Copy area</div>
+        <div class="shortcut-item"><kbd>T</kbd> Open research tree</div>
+        <div class="shortcut-item"><kbd>M</kbd> Open map</div>
+        <div class="shortcut-item"><kbd>Alt + D</kbd> Construction planner</div>
+        <div class="shortcut-item"><kbd>F</kbd> Pick up nearby items</div>
+      </div>
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip</span>
+          In Settings, set "Pick ghost items if no items available" to ON. This lets you press <kbd>Q</kbd> to get a ghost of any building even if you don't have one in inventory - great for planning.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-card" id="phase-1">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 01</div>
+      <div class="phase-title-block">
+        <div class="phase-title">First Steps - Manual Phase</div>
+        <div class="phase-subtitle">Crash landing to first automated production</div>
+      </div>
+      <div class="phase-status-badge" id="psb-1">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">You just crash-landed with nothing. Before any automation exists, you're the factory - mining, crafting, and hauling everything by hand. This phase builds the raw material stockpile you need to bootstrap electricity and research.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> 8-10 iron furnaces, 4-6 copper furnaces, coal self-fueling, enough materials to build power and a lab.</div>
+      </div>
+
+      <div class="section-title">Checklist</div>
+      <div class="checklist" id="cl-1">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Press <kbd>Alt</kbd> immediately - this shows resource overlays on all machines so you can see what items are inside and what's being produced.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Loot your crashed ship with <kbd>Ctrl + LClick</kbd> - grab all iron plates and ammo from inside. Use Alt to see what's in there.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Find coal rocks on the map (<kbd>M</kbd>). These look like darker rocks and yield 20-40 coal + stone each. Mine every coal rock you find early on.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Use <kbd>Alt+D</kbd> (construction planner) to scan an area and identify rock types before mining - it shows what resources each rock contains.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Place your starting Burner Mining Drill on the iron ore patch. Place a Stone Furnace adjacent with its output facing the furnace input.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Fuel the drill with wood first (press <kbd>Z</kbd> with wood selected to quick-insert). Gather coal as fast as possible to replace wood fuel.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Craft enough Stone Furnaces from mined stone: aim for 8-10 iron furnaces and 4-6 copper furnaces. Use <kbd>Shift + LClick</kbd> to craft the max possible.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Place Burner Mining Drills on the iron patch feeding into your row of stone furnaces. Set up at least 8 furnaces smelting iron.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build a coal "snake" - a chain of Burner Mining Drills on coal where each drill output feeds fuel into the next drill, making the coal patch self-fueling. Kick-start it with a few coal pieces.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up 4-6 copper furnaces with drills feeding them. Copper is needed for wire, circuits, and science packs.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">While waiting for materials, hand-craft intermediate items: Iron Gear Wheels, Copper Cables - these will be used constantly. Use <kbd>Shift + LClick</kbd> to queue max crafting.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Don't destroy all trees - trees absorb pollution and keep biters calm in the early game. Chop selectively.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap</span>
+          Many beginners spend too long in the full-manual phase. As soon as you have any coal production, start building drills and furnaces. Don't wait until you "have enough" - you never feel like you have enough until you automate.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip</span>
+          When you have excess coal, hold <kbd>Ctrl + RClick</kbd> on a machine to insert half a stack at once instead of repeatedly pressing <kbd>Z</kbd>. Great for bulk-fueling furnaces.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('1')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-card" id="phase-2">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 02</div>
+      <div class="phase-title-block">
+        <div class="phase-title">First Power &amp; Red Science</div>
+        <div class="phase-subtitle">Electricity, a lab, and your first technology</div>
+      </div>
+      <div class="phase-status-badge" id="psb-2">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Electricity unlocks <strong>everything</strong>. Without power, all your assemblers and research labs are paperweights. This is the bridge from the stone age to the automation age.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Steam power running, lab built, Automation technology researched.</div>
+      </div>
+
+      <div class="section-title">Power Setup</div>
+      <div class="checklist" id="cl-2a">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Craft: 1x Offshore Pump, 1x Boiler, 2x Steam Engine, several Pipes, and Small Electric Poles.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Place the Offshore Pump on the edge of a water body. Connect with pipes to the Boiler, then pipes from boiler to Steam Engines. Rotate buildings with <kbd>R</kbd> to align pipe connections.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Put coal in the boiler (or use an inserter feeding coal from a chest). The boiler turns water to steam, steam engines make electricity.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Drag Small Electric Poles from the steam engine toward your base to distribute power. Poles connect automatically if they are within reach of each other.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-ratio">
+        <span class="callout-icon">&#9881;</span>
+        <div>
+          <span class="callout-label">Key Ratio - Early Steam Power</span>
+          <code>1 Boiler : 2 Steam Engines</code><br>
+          Each boiler feeds exactly 2 steam engines. Scale in multiples of this. A 5 boiler + 10 steam engine setup (900 kW) is a solid early power plant.
+        </div>
+      </div>
+
+      <div class="section-title">Lab &amp; Research</div>
+      <div class="checklist" id="cl-2b">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Crafting 10 Copper Plates unlocks the Lab in your research tree (a trigger-based unlock in v2.x). Craft a Lab and place it near your base with power connected.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Hand-craft 10 Red Science Packs (Automation Science Packs). Recipe: 1 Copper Plate + 1 Iron Gear Wheel each.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Insert the 10 red science packs into the lab with <kbd>Ctrl + LClick</kbd> on an empty inventory slot - this auto-loads all matching items.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Queue the <strong>Automation</strong> technology in the research tree (<kbd>T</kbd>). Also queue <strong>Logistics</strong> (underground belts + splitters) - these are essential.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">While waiting for research: craft Assembling Machines and plan where you'll put them. Also craft Iron Gear Wheels and Copper Cables in bulk.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap</span>
+          The game doesn't pause while you're in menus or the research tree by default. Change this in settings if you want breathing room. Also: when electricity drops to zero and the "power gauge" goes red, check if your coal supply to the boiler ran out - it's almost always a fuel issue.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip</span>
+          Click on any item or building in the crafting menu with <kbd>Alt + Click</kbd> to open the Factoriopedia - it shows all recipes and production chains. Invaluable for figuring out what you need to build something.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('2')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-card" id="phase-3">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 03</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Automation - Red &amp; Green Science</div>
+        <div class="phase-subtitle">Your first automated production lines</div>
+      </div>
+      <div class="phase-status-badge" id="psb-3">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">This is where Factorio clicks. Assembling Machines handle crafting so you don't have to. Getting red and green science flowing automatically means your tech progresses while you work on other things - research never stops again.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Automated red + green science flowing into at least 2 labs. Logistics tech researched.</div>
+      </div>
+
+      <div class="section-title">Temporary Automation Setup</div>
+      <div class="checklist" id="cl-3">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Craft several Assembling Machine 1s (from Automation research). These can craft most items automatically.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up 2 Assembling Machines making <strong>Iron Gear Wheels</strong>. Feed iron plates via Inserter from a Chest. Use <kbd>Shift + RClick</kbd> to copy a recipe, <kbd>Shift + LClick</kbd> to paste it.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up 1-2 Assembling Machines making <strong>Copper Cables</strong>. Output cables into a chest, then have inserters pull cables into the circuit assembler.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up 2 Assembling Machines making <strong>Green Circuits (Electronic Circuits)</strong>. Recipe: 3 Copper Cable + 1 Iron Plate.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Red Science (Automation Science Pack)</strong> production: 1 Copper Plate + 1 Iron Gear Wheel. Use 2 assemblers for this.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Run an output Inserter from the red science assembler into a chest, and another Inserter from that chest into the Lab. Or run a belt directly to the lab.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Once Logistics is researched, set up <strong>Green Science (Logistic Science Pack)</strong>: 1 Transport Belt + 1 Inserter. Needs its own assembly line.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Add a second (and third) Lab and connect them to both science pack feeds. More labs = faster research.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research queue in order: <strong>Logistics</strong> (underground belts), <strong>Fast Inserter</strong>, <strong>Steel Processing</strong>, <strong>Military</strong> (for turrets). Keep labs fed constantly.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up automated <strong>Transport Belt</strong> production - you will always need more belts. Belts need iron gears, so tap your gear output.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up automated <strong>Inserter</strong> production - you also always need more inserters.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip</span>
+          Think of Assembling Machines as 3x3 tiles. When placing them side by side, build one, then use its footprint as a spacer - you always know you have exactly 3 tiles between centers. This makes clean builds much easier.
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Production Deadlock</span>
+          If an assembler stops producing, check: (1) Is there power? (2) Are input chests empty? (3) Are output chests full (backed up)? A full output chest stalls the entire line. Always give output a place to go.
+        </div>
+      </div>
+
+      <div class="callout callout-ratio">
+        <span class="callout-icon">&#9881;</span>
+        <div>
+          <span class="callout-label">Key Ratio - Green Science</span>
+          Green science = 1 Transport Belt + 1 Inserter.<br>
+          <code>1 belt assembler + 1 gear assembler + 1 inserter assembler = ~1 green science assembler</code><br>
+          You'll want at least 2-3 green science assemblers to keep labs fed.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('3')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-card" id="phase-4">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 04</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Smelting &amp; Bus Foundation</div>
+        <div class="phase-subtitle">Building the backbone of your base</div>
+      </div>
+      <div class="phase-status-badge" id="psb-4">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">A proper smelting array and a Main Bus layout are what separate functional bases from spaghetti nightmares. The main bus is the single most important structural decision for a new player - it makes expansion clean and logical.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> 16-20 iron furnaces, 8-10 copper furnaces, stone bricks flowing, main bus started.</div>
+      </div>
+
+      <div class="section-title">Proper Smelting Columns</div>
+      <div class="checklist" id="cl-4">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build an <strong>Iron Smelting Column</strong>: a straight line of 16-20 Stone Furnaces. Belt ore in on one side, belt plates out the other side. Inserters load/unload each furnace.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build a <strong>Copper Smelting Column</strong>: 8-10 Stone Furnaces in the same arrangement. Copper is less needed early but scales up significantly mid-game.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build a <strong>Stone Smelting Column</strong>: 4-6 furnaces making Stone Bricks. Stone bricks are used for concrete (later) and are also a raw bus material.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Make sure coal miners are producing enough coal to fuel all furnaces AND your boilers. If furnaces go dark, you need more coal miners.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-ratio">
+        <span class="callout-icon">&#9881;</span>
+        <div>
+          <span class="callout-label">Key Ratio - Stone Furnace Smelting</span>
+          <code>1 Burner Mining Drill : ~1 Stone Furnace</code> (rough match)<br>
+          A full yellow belt (15/sec) needs about 13-14 stone furnaces to keep pace. Build 16-20 for buffer.
+        </div>
+      </div>
+
+      <div class="section-title">The Main Bus</div>
+      <div class="checklist" id="cl-4b">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Pick a direction from your smelters and lay down a straight row of belts - this is your <strong>Main Bus</strong>. Production feeds into the bus; everything else branches off it.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Use <strong>groups of 4 belts</strong> with 2 empty tiles between groups. The 2-tile gap allows underground belts to cross underneath - critical for routing items off the bus.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Recommended bus lanes (left to right): Iron Plates (4 lanes), Copper Plates (2-4 lanes), Steel (1-2 lanes), Green Circuits (2-4 lanes), Stone Bricks (1 lane). You won't fill them all immediately.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">To pull items off the bus: clear a gap, place a Splitter, use underground belts to route the split lane to your factory area. Underground belts can pass under the bus without interrupting it.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Leave way more space than you think you need between production areas. Factories always expand - cramped designs become painful fast.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Move your Science Pack production to pull from the bus instead of dedicated chests - this is cleaner and easier to scale.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Spaghetti Thinking</span>
+          The temptation is to connect every machine to every other machine directly. Resist. The Main Bus forces you to think in terms of a shared resource highway. It feels limiting at first but makes every future addition trivial - just tap the bus.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip</span>
+          Don't build the whole bus at once. Put down lane markers (ghost belts or just physical belts) in the right positions now, and fill them in as smelting capacity grows. This reserves the space and gives you a layout to build toward.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('4')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase-card" id="phase-5">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 05</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Military Science</div>
+        <div class="phase-subtitle">Defense, turrets, and fighting back</div>
+      </div>
+      <div class="phase-status-badge" id="psb-5">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Biters attack your base periodically - and attacks get bigger over time as your pollution spreads. Military science unlocks better weapons, walls, and turrets that keep your factory safe while you focus on building.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Defended perimeter with gun turrets + walls, automated ammo production, military science flowing.</div>
+      </div>
+
+      <div class="section-title">Defense Setup</div>
+      <div class="checklist" id="cl-5">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Military</strong> tech (requires red + green science). This unlocks Gun Turrets, Walls, Grenades upgrades.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build stone <strong>Walls</strong> around the perimeter of your base. Walls stop biters from walking through - they bite at walls instead. Build walls at least 2-3 tiles thick in high-traffic areas.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Place <strong>Gun Turrets</strong> behind the walls every 5-7 tiles. Turrets fire automatically at biters. Each turret needs Firearm Magazines (ammo) inserted manually or via inserter from a chest.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up automated <strong>Iron Ammo (Firearm Magazines)</strong> production feeding into chests near turrets. Recipe: 4 Iron Plates = 1 magazine.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Actively push back biter nests near your base. Move left-right while shooting to dodge their projectiles. Bring fish (healing) from nearby water if available.</div>
+        </div>
+      </div>
+
+      <div class="section-title">Military Science Packs</div>
+      <div class="checklist" id="cl-5b">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Military Science Pack recipe: 1 Firearm Magazine + 1 Grenade + 2 Wall. Set up assemblers pulling from the bus for iron and stone.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Automate <strong>Grenade</strong> production: 5 Coal + 10 Iron Plate. Coal should be on your bus or at least accessible from a chest.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Feed military science into your labs alongside red and green. Research priorities: <strong>Turret Damage</strong> upgrades, <strong>Physical Projectile Damage</strong>, <strong>Steel Processing</strong> if not yet done.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Neglecting Defense</span>
+          A biter breach that destroys your power poles or assemblers can set you back hours. Build walls and turrets proactively, before you feel like you need them. A defended base lets you build in peace.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip</span>
+          When fighting biters manually, strafe side-to-side while shooting. Biter projectiles are slow and easy to dodge with movement. Grenades are extremely effective against groups - throw one into a cluster before shooting.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('5')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 6 -->
+  <div class="phase-card" id="phase-6">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 06</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Oil &amp; Blue Science</div>
+        <div class="phase-subtitle">The biggest complexity jump in the game</div>
+      </div>
+      <div class="phase-status-badge" id="psb-6">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Oil introduces <strong>fluids</strong> - a completely different logistics system from belts. It's where most new players get stuck. But once you have blue science flowing, the mid-game opens up completely and progression accelerates dramatically.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Oil refinery running, plastic + sulfur production, red circuits automated, blue science flowing into labs.</div>
+      </div>
+
+      <div class="section-title">Oil Setup</div>
+      <div class="checklist" id="cl-6">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Oil Processing</strong> (requires blue science beakers to unlock advanced processing later, but Basic Oil Processing is available from red+green+military science).</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Find an <strong>Oil Patch</strong> on the map. Build an Oil Refinery on or adjacent to oil wells (connect oil wells to refinery with pipes).</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set refinery to <strong>Basic Oil Processing</strong> initially. This produces: Petroleum Gas (most useful early), Light Oil, Heavy Oil.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Add <strong>Pumps</strong> in pipe networks longer than ~20 pipes. In v2.x, long pipes without pumps lose pressure and stop flowing. When a pipe network stops working, add a pump.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build a <strong>Chemical Plant</strong> for Plastic production. Recipe: 1 Coal + 2 Petroleum Gas = 2 Plastic Bars. Coal from the bus, gas from a pipe.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build a Chemical Plant for <strong>Sulfur</strong>. Recipe: 2 Water + 3 Petroleum Gas = 2 Sulfur. Sulfur is needed for blue science and sulfuric acid.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Add plastic and sulfur to your main bus (1-2 lanes each).</div>
+        </div>
+      </div>
+
+      <div class="section-title">Red Circuits &amp; Blue Science</div>
+      <div class="checklist" id="cl-6b">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Advanced Circuit (Red Circuit)</strong> production. Recipe: 4 Copper Cable + 2 Green Circuit + 2 Plastic Bar. These are slow to make - build several assemblers.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Add Red Circuits to your main bus (2 lanes). They're used everywhere in mid and late game.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Engine Unit</strong> production for blue science. Recipe: 1 Steel Pipe + 8 Iron Gear Wheel + 1 Steel Plate (x1 crafted in assembler). Also needs Chemical Plant for some variants - check the recipe.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Blue Science (Chemical Science Pack)</strong>. Recipe: 3 Advanced Circuit + 2 Engine Unit + 1 Sulfur. Hook assemblers to the bus.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Feed blue science into all labs. Research priorities: <strong>Advanced Oil Processing</strong>, <strong>Robotics</strong> (critically important), <strong>Construction Robotics</strong>.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Switch refinery to <strong>Advanced Oil Processing</strong> once researched. This adds water input and produces more useful outputs. Also research and use <strong>Coal Liquefaction</strong> or <strong>Cracking</strong> to balance oil product ratios.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Oil Backup</span>
+          If any oil product (petroleum gas, light oil, heavy oil) completely fills its pipe/storage, the refinery STOPS. You must always have consumers for all three products or use cracking to convert excess into what you need. Heavy oil -> Light oil cracking and Light oil -> Petroleum gas cracking fix this.
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Red Circuits Are Slow</span>
+          Advanced Circuits are the slowest to produce of anything you've made so far. Don't be surprised when your blue science factory crawls because red circuits can't keep up. You need 4-8 assemblers dedicated just to red circuits. Scale this up early.
+        </div>
+      </div>
+
+      <div class="callout callout-ratio">
+        <span class="callout-icon">&#9881;</span>
+        <div>
+          <span class="callout-label">Key Ratio - Advanced Oil Processing</span>
+          <code>Advanced Oil Processing: 100 crude + 50 water = 25 heavy + 45 light + 55 petroleum gas</code><br>
+          For balancing: use Heavy Oil Cracking (40 heavy + 30 water = 30 light oil) and Light Oil Cracking (30 light + 30 water = 20 petroleum gas) to turn excess into petroleum gas.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('6')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 7 -->
+  <div class="phase-card" id="phase-7">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 07</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Construction Robots</div>
+        <div class="phase-subtitle">The game-changer that transforms building</div>
+      </div>
+      <div class="phase-status-badge" id="psb-7">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Construction robots are Factorio's defining feature. Once you have robots, you stop manually placing every building and instead blueprint and let bots do the work. This enables exponential scaling - you design, robots execute.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Roboports deployed, construction bots active, personal roboport equipped, logistic network running.</div>
+      </div>
+
+      <div class="section-title">Robot Rush Build</div>
+      <div class="checklist" id="cl-7">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research path: <strong>Robotics</strong> (blue science) -> <strong>Construction Robotics</strong> -> <strong>Logistic Robotics</strong>. Make this your top research priority after blue science flows.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build <strong>Flying Robot Frame</strong> production. Recipe requires Electric Engine Units which need Lubricant (from Light Oil in Chemical Plant) and Electric Engine parts.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Produce <strong>Construction Bots</strong>: Flying Robot Frame + Green Circuit + Iron Gear Wheel. Build at least 50, ideally 100+ before expanding heavily.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build <strong>Roboports</strong> (4x4 buildings). Each roboport covers a charging and logistics area. Place them so their coverage (grey circle) overlaps - no dead zones.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Load construction bots into roboports. They'll now automatically deconstruct marked items and build ghost blueprints within range.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Personal Roboport Equipment</strong>. Build it and insert into your armor grid. Now you carry a personal roboport - your own bots fly out from your character to build things.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build <strong>Logistic Bots</strong> and place them in roboports. Logistic bots move items between provider chests and requester chests - the foundation of the logistic network.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Keep producing more bots - 50 is a start, 200+ is where things get genuinely fast. The more bots you have, the faster everything gets built.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip - The Robot Rush</span>
+          Many experienced players prioritize getting robots as fast as possible, even accepting a slower science rate during the rush. Robots pay back the investment immediately - you stop spending time manually placing every belt and inserter. It's worth temporarily straining your base to get here quickly.
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Too Few Bots</span>
+          With only 20-30 bots you'll see them constantly busy but work barely progresses. The impact is minimal. At 100+ bots, things happen noticeably faster. At 200-500, it feels like magic. Always be producing more bots.
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Power for Charging</span>
+          Robots need to charge at roboports. With many bots flying around, charging demand spikes. If your power is weak, bots will queue at chargers and slow down. Getting solar power (Phase 8) goes hand-in-hand with scaling up robots.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('7')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 8 -->
+  <div class="phase-card" id="phase-8">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 08</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Solar Power</div>
+        <div class="phase-subtitle">Stable, scalable, pollution-free power</div>
+      </div>
+      <div class="phase-status-badge" id="psb-8">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Coal power works but it requires constant coal supply, produces pollution that aggravates biters, and doesn't scale cleanly. Solar + accumulators are zero-maintenance once placed and robots can build huge arrays quickly.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Large solar array supplementing or replacing coal power, laser turret defense upgrade, power stable for expansion.</div>
+      </div>
+
+      <div class="section-title">Solar Array Setup</div>
+      <div class="checklist" id="cl-8">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Solar Energy</strong> (blue science) and <strong>Electric Energy Accumulator</strong>.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Battery</strong> production: Chemical Plant, Sulfuric Acid + Iron Plate + Copper Plate. Batteries are needed for Accumulators.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Produce Solar Panels and Accumulators in bulk - you'll need hundreds to thousands eventually. Robots will place them.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Blueprint a solar tile pattern and have robots build it. Use the 25:21 ratio - every group of 25 solar panels needs 21 accumulators.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Include roboports in your solar blueprint so bots can reach and build the furthest panels.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Keep coal boilers as backup power initially. Watch the power production graph - if accumulators are always depleting overnight, add more solar panels and accumulators.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-ratio">
+        <span class="callout-icon">&#9881;</span>
+        <div>
+          <span class="callout-label">Key Ratio - Solar Power</span>
+          <code>25 Solar Panels : 21 Accumulators</code><br>
+          This ratio ensures accumulators fill during the day and are fully drained by morning - perfect efficiency. Each solar panel produces 60 kW peak. Each accumulator stores 5 MJ.
+        </div>
+      </div>
+
+      <div class="section-title">Laser Turret Upgrade</div>
+      <div class="checklist" id="cl-8b">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Laser Turrets</strong>. These use electricity instead of ammo - no more manual ammo resupply at turrets.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build Laser Turrets using the battery production you already have (laser turrets need batteries in their recipe). Replace gun turrets at the perimeter.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Note: laser turrets draw a lot of power during biter attacks. Make sure your power grid can handle spikes - this is another reason to have robust solar + accumulators.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip - Solar Design Pattern</span>
+          Avoid rotationally symmetric solar layouts - they look clean but create dead zones. Instead use a rectangular repeating tile that can be stamped side-by-side and top-to-bottom. Design once, stamp everywhere with robots.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('8')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 9 -->
+  <div class="phase-card" id="phase-9">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 09</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Yellow Science (Production Science)</div>
+        <div class="phase-subtitle">Do this BEFORE purple science</div>
+      </div>
+      <div class="phase-status-badge" id="psb-9">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Yellow science unlocks Personal Roboport, Power Armor Mk2, Portable Fusion Reactor, and the full logistics system. These make you vastly more effective as a builder. Despite appearing "after" purple in the UI, do yellow first - the quality-of-life upgrades are worth far more at this stage.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Yellow science flowing, red belts deployed, steel furnaces upgraded, personal roboport equipped.</div>
+      </div>
+
+      <div class="section-title">Base Upgrades First</div>
+      <div class="checklist" id="cl-9">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Use robots to upgrade all yellow belts to <strong>Red Belts</strong> (Fast Transport Belts). Build up a stockpile of red belts first, then stamp the upgrade - robots do all the work.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Upgrade all Stone Furnaces to <strong>Steel Furnaces</strong>. Same footprint, double the smelting speed. This doubles your throughput without building more furnaces.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Scale up Green Circuit production significantly - blue circuits are extremely green-circuit-hungry and you'll need far more than you currently make.</div>
+        </div>
+      </div>
+
+      <div class="section-title">Yellow Science Ingredients</div>
+      <div class="checklist" id="cl-9b">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Processing Unit (Blue Circuit)</strong> production. Recipe: 20 Green Circuit + 2 Advanced Circuit + 1 Sulfuric Acid. Needs Assembling Machine 2 (handles fluids). Very green-circuit-intensive - expect to build many parallel assemblers.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Low Density Structure</strong> production. Recipe: 20 Copper Plate + 5 Steel + 2 Plastic Bar. Copper-heavy - expand your copper smelting column.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Flying Robot Frame</strong> production (needed for yellow science pack AND for making more bots). Recipe: 1 Steel + 2 Battery + 3 Electronic Circuit + 1 Electric Engine Unit.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Yellow Science (Production Science Pack)</strong> production. Recipe: 1 Electric Engine Unit + 1 Low Density Structure + 1 Processing Unit + 1 Rail.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Add Blue Circuits and Low Density Structures to your main bus - they are late-game staples.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research priority with yellow science: <strong>Power Armor Mk2</strong>, <strong>Personal Roboport Mk2</strong>, <strong>Portable Fusion Reactor</strong>, <strong>Logistics System</strong>.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Blue Circuit Bottleneck</span>
+          Processing Units (blue circuits) are the most resource-intensive item you've crafted so far. A single assembler makes about 1 per 10 seconds. You'll need 6-10 assemblers minimum to keep yellow science and future rocket production supplied. Plan for a large blue circuit factory from the start.
+        </div>
+      </div>
+
+      <div class="callout callout-ratio">
+        <span class="callout-icon">&#9881;</span>
+        <div>
+          <span class="callout-label">Key Ratio - Blue Circuit Production</span>
+          <code>1 blue circuit assembler needs ~10 green circuit assemblers to keep it fed</code><br>
+          Blue circuits consume 20 green circuits each. At 1 blue/10 seconds, that's 2 green circuits/sec - roughly what 10 green circuit assemblers produce.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('9')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 10 -->
+  <div class="phase-card" id="phase-10">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 10</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Power Armor &amp; Logistics Network</div>
+        <div class="phase-subtitle">You become a construction god</div>
+      </div>
+      <div class="phase-status-badge" id="psb-10">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Power Armor with personal roboport and fusion reactor transforms your character into a mobile construction machine. Combined with the logistic network (requester/provider chests), you can deploy entire factories from your inventory with bots doing all the physical placement.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Power Armor Mk2 equipped with fusion reactor + personal roboport + shields, logistic network active.</div>
+      </div>
+
+      <div class="checklist" id="cl-10">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Craft <strong>Power Armor Mk2</strong>. This has a large equipment grid for modules. Recipe: expensive - needs processing units and low density structures.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Install <strong>Portable Fusion Reactor(s)</strong> in armor grid. These generate power for all other equipment. No fuel needed - infinite energy.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Install <strong>Personal Roboport Mk2</strong> equipment. Multiple roboports = larger build radius and more simultaneous bot slots.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Install <strong>Energy Shield Mk2</strong> equipment for combat protection when clearing biter nests.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Install <strong>Exoskeleton</strong> equipment for faster movement speed.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up the <strong>Logistic Network</strong>: place Provider Chests (items go in) and Requester Chests (items come out, you set what you want). Logistic bots handle the transport automatically within roboport coverage.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set a <strong>Logistic Request</strong> on yourself (character inventory) for common items: belts, inserters, poles, etc. Bots will automatically keep your inventory stocked from the network.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Use <strong>Active Provider Chests</strong> in production lines (bots proactively pull from these) and <strong>Passive Provider Chests</strong> for storage (bots pull only when something requests it).</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip - Equipment Balance</span>
+          Fill remaining armor slots with exoskeletons for movement speed - it makes a huge quality-of-life difference. A good Mk2 loadout: 2 fusion reactors, 2 personal roboports Mk2, 2 energy shields Mk2, exoskeletons filling the rest.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('10')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 11 -->
+  <div class="phase-card" id="phase-11">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 11</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Nuclear Power</div>
+        <div class="phase-subtitle">Abundant power for the endgame</div>
+      </div>
+      <div class="phase-status-badge" id="psb-11">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Purple science (Phase 12) unlocks beacons and Tier 3 modules which massively increase power consumption. Nuclear power provides the abundant, reliable megawatts needed for a fully beaconed endgame factory. Build nuclear before purple science, not after.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Uranium mining active, at least 4-reactor nuclear plant running, 500+ MW available.</div>
+      </div>
+
+      <div class="section-title">Uranium Setup</div>
+      <div class="checklist" id="cl-11">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Uranium Mining</strong> and <strong>Nuclear Power</strong> (yellow + blue science). Also research <strong>Atomic Bomb</strong> branch leads to Kovarex enrichment later.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Find Uranium ore on the map. Uranium mining requires <strong>Sulfuric Acid</strong> piped to the miners (unique requirement - normal drills need fluid input).</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Sulfuric Acid</strong> production if not already done (Chemical Plant: Sulfur + Iron Plate + Water). Pipe it to the uranium mine.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Use a train to bring uranium ore back to base (or run pipes for sulfuric acid out and belt uranium back). A single 1-4 train (1 tank car for sulfuric acid, 3-4 cargo cars for uranium) works perfectly.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build <strong>Uranium Processing</strong> in Centrifuges. This produces U-235 (~0.7%) and U-238 (~99.3%). U-235 is nuclear fuel. U-238 is mostly waste (save 40 U-235 for Kovarex later).</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build <strong>Nuclear Fuel Cell</strong> production: 10 U-235 + 1 Iron Plate = 10 fuel cells. A single centrifuge output is more than enough for 4-8 reactors.</div>
+        </div>
+      </div>
+
+      <div class="section-title">Reactor Plant</div>
+      <div class="checklist" id="cl-11b">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Place reactors <strong>close to a large water source</strong>. This is more important than being near uranium. Heat exchangers need enormous amounts of water.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build a <strong>4-reactor minimum</strong> setup (2x2 arrangement). Reactors touching each other get a neighbor bonus - each extra neighbor doubles output. A 4-reactor array outputs 480 MW.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Chain: Reactor (heat) -> Heat Pipes -> Heat Exchangers -> Steam -> Steam Turbines -> Power. Each reactor needs ~heat exchangers and turbines downstream.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Use the logistic network to supply fuel cells to reactors and remove spent fuel cells automatically.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Store 40+ U-235 in reserve for Kovarex Enrichment (optional tech that makes more U-235 from U-238 - great for late game but not required for rocket).</div>
+        </div>
+      </div>
+
+      <div class="callout callout-ratio">
+        <span class="callout-icon">&#9881;</span>
+        <div>
+          <span class="callout-label">Key Ratio - Nuclear Power</span>
+          Per reactor (with neighbor bonuses in 2x2):<br>
+          <code>1 Reactor (160 MW effective) : 8 Heat Exchangers : 14 Steam Turbines</code><br>
+          8-reactor plant needs 10+ lanes of water. Place near water, not near uranium.
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Kovarex Is Optional</span>
+          You do NOT need Kovarex enrichment to run a nuclear plant. Basic uranium processing with a single centrifuge produces plenty of U-235 for any reasonably sized plant. Don't delay nuclear because you don't have Kovarex yet.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('11')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 12 -->
+  <div class="phase-card" id="phase-12">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 12</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Purple Science (Utility Science)</div>
+        <div class="phase-subtitle">The final tech tier before rockets</div>
+      </div>
+      <div class="phase-status-badge" id="psb-12">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Purple science is surprisingly straightforward compared to yellow - it only needs steel and red circuits. But it unlocks Tier 3 assemblers, Tier 3 modules, beacons, and blue belts which are all critical for rocket production throughput.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Purple science flowing, Tier 3 modules unlocked, beacons researched, Tier 3 assemblers available.</div>
+      </div>
+
+      <div class="checklist" id="cl-12">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Scale up <strong>Red Circuit (Advanced Circuit)</strong> production significantly before starting purple science. You'll need a full bus lane or more.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Scale up <strong>Steel</strong> production - purple science needs a lot. Upgrade to steel furnaces (from Phase 9) and add more smelting columns if needed.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Purple Science (Utility Science Pack)</strong> production. Recipe: 3 Advanced Circuit + 1 Flying Robot Frame + 2 Low Density Structure.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Feed purple science into labs alongside all other science types. Research priorities: <strong>Productivity Module 3</strong>, <strong>Speed Module 3</strong>, <strong>Beacon</strong>, <strong>Tier 3 Assembling Machine</strong>.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Kovarex Enrichment</strong> if you want more U-235 (optional but nice for late game).</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Blue Belt (Express Transport Belt)</strong> - extremely expensive to make but gives highest throughput. Not strictly necessary for first rocket but helps with late game.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip - Research Order</span>
+          Prioritize <strong>Productivity Module 3</strong> before anything else from purple science. A Productivity 3 module in your Rocket Silo reduces rocket parts needed from 1000 to ~715 each - a massive saving. Get Tier 3 assemblers second for the 4-module slots (needed for proper beacon setups).
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('12')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 13 -->
+  <div class="phase-card" id="phase-13">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 13</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Modules &amp; Beacons</div>
+        <div class="phase-subtitle">Massive throughput multipliers</div>
+      </div>
+      <div class="phase-status-badge" id="psb-13">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">Productivity modules reduce the resources needed per output. Speed beacons multiply production speed of everything in range. Combined, they transform your factory from barely sufficient to massively overproducing - this is what makes a rocket launch achievable without building an enormous factory.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Productivity 3 modules in key buildings, speed beacons deployed, oil fully beaconed and upgraded.</div>
+      </div>
+
+      <div class="checklist" id="cl-13">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build <strong>Productivity Module 3</strong> production. Very expensive (blue circuits + red circuits + green circuits). Stockpile 50-100 before deploying.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build <strong>Speed Module 3</strong> production. Equally expensive. You'll need many for beacons.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Build <strong>Beacons</strong>. Each beacon transmits its module effects to all machines within 3 tiles. Speed Module 3 beacons surrounding an assembler give massive speed boosts.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Install <strong>Productivity Module 3</strong> in: Rocket Silo (4 slots - this is the highest priority), all Blue Circuit assemblers, all Green Circuit assemblers, Oil Refinery.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Surround key production buildings with <strong>Speed Beacon</strong>s (each containing 2x Speed Module 3). Buildings in range of 4+ beacons get enormous speed multipliers.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Upgrade <strong>Oil Refinery</strong> with Productivity 3 modules + surrounding speed beacons. This dramatically increases oil output from the same inputs.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Add Tier 3 (yellow) Assembling Machines where possible - they hold 4 module slots vs 2 for Tier 2. Use them for the most bottlenecked production steps.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Upgrade <strong>Nuclear Fuel Cell</strong> production with Productivity 3 modules in a Tier 3 assembler - you get more fuel from the same U-235.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Module Power Drain</span>
+          Speed modules dramatically increase power consumption of the machines they're in. Productivity modules in beacons are banned (only speed/efficiency in beacons). Before deploying beacons everywhere, make sure your nuclear plant is online and producing abundantly. A power sag with beacons deployed will tank your entire factory.
+        </div>
+      </div>
+
+      <div class="callout callout-ratio">
+        <span class="callout-icon">&#9881;</span>
+        <div>
+          <span class="callout-label">Key Ratio - Rocket Silo with Prod 3</span>
+          <code>1000 rocket parts needed -> ~715 with 4x Productivity Module 3 in silo</code><br>
+          This saves ~285 of each rocket part. At rocket scale, that's a substantial reduction. Always fill the silo with Productivity 3.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('13')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 14 -->
+  <div class="phase-card" id="phase-14">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 14</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Rocket Components</div>
+        <div class="phase-subtitle">The final production push</div>
+      </div>
+      <div class="phase-status-badge" id="psb-14">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">The rocket requires four main components produced in quantity. Each one is expensive, and the silo is slow to fill. This phase is about scaling every upstream production line enough to feed the silo at a meaningful rate while optionally building a satellite for the complete ending.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Rocket Silo placed with Prod 3 modules, all 4 rocket parts flowing in, satellite crafted and ready.</div>
+      </div>
+
+      <div class="section-title">Rocket Silo</div>
+      <div class="checklist" id="cl-14">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Research <strong>Rocket Silo</strong>. Craft it (very expensive - needs blue circuits, steel, low density structures). Place it with plenty of space around it for inserters and belts.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Insert <strong>4x Productivity Module 3</strong> into the Rocket Silo. This is mandatory - don't launch without them.</div>
+        </div>
+      </div>
+
+      <div class="section-title">The Four Rocket Parts</div>
+      <div class="two-col">
+        <div class="recipe-block">
+          <div class="recipe-title">Rocket Fuel</div>
+          <ul>
+            <li>10 Solid Fuel each</li>
+            <li>Solid Fuel: 10 Light Oil or 20 Petroleum Gas</li>
+            <li>Scale up oil production heavily</li>
+            <li>Needs: lots of light oil -> solid fuel -> rocket fuel</li>
+          </ul>
+        </div>
+        <div class="recipe-block">
+          <div class="recipe-title">Rocket Control Unit</div>
+          <ul>
+            <li>1 Processing Unit (blue circuit)</li>
+            <li>1 Speed Module 1</li>
+            <li>Massive strain on blue circuit production</li>
+            <li>Add many parallel assemblers</li>
+          </ul>
+        </div>
+        <div class="recipe-block">
+          <div class="recipe-title">Low Density Structure</div>
+          <ul>
+            <li>20 Copper + 5 Steel + 2 Plastic</li>
+            <li>Double existing production (needed for both yellow science and rockets)</li>
+            <li>Copper-intensive - expand copper smelting</li>
+          </ul>
+        </div>
+        <div class="recipe-block">
+          <div class="recipe-title">Satellite (Optional)</div>
+          <ul>
+            <li>100 Low Density Structure</li>
+            <li>100 Solar Panel</li>
+            <li>100 Accumulator</li>
+            <li>5 Radar</li>
+            <li>50 Processing Unit</li>
+            <li>Craft 1 manually or in assembler</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="checklist" id="cl-14b">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Rocket Fuel</strong> production: Light Oil -> Solid Fuel (Chemical Plant) -> Rocket Fuel (Chemical Plant). Scale oil refinery output with beacons and modules first.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Set up <strong>Rocket Control Unit</strong> production. Add dedicated assemblers - this bottlenecks on blue circuits so have many parallel blue circuit assemblers.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Double your <strong>Low Density Structure</strong> production - rockets need as much as yellow science does.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Scale up <strong>Green Circuits</strong> - ideally fill an entire city block with green circuit production to feed blue circuits at scale.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Belt or bot-deliver all four rocket components into the Rocket Silo via inserters.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Craft a <strong>Satellite</strong>. You can do this manually if you have the materials - it only needs one. Insert it into the rocket silo via inserter or manually.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Watch the silo fill up. With 4x Productivity 3 modules, you need ~715 of each rocket part instead of 1000. Track progress in the silo UI.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">New Player Trap - Underestimating Scale</span>
+          Every production line you've built so far will feel inadequate when feeding a rocket silo. The silo needs sustained production of all four components simultaneously. Check which component fills slowest and expand that production first. The bottleneck shifts as you fix each one.
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">Pro Tip - Satellite Worth It</span>
+          Launching with a satellite completes the game fully and gives you permanent satellite view over the entire map. It takes extra resources but is very achievable. Stock solar panels and accumulators from your Phase 8 production. The satellite uses 100 of each - just pull from stockpiles.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('14')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <!-- PHASE 15 -->
+  <div class="phase-card" id="phase-15">
+    <div class="phase-header" onclick="toggleCollapse(this)">
+      <div class="phase-badge">Phase 15</div>
+      <div class="phase-title-block">
+        <div class="phase-title">Launch the Rocket!</div>
+        <div class="phase-subtitle">You did it</div>
+      </div>
+      <div class="phase-status-badge" id="psb-15">In Progress</div>
+      <span class="phase-collapse-icon">&#9660;</span>
+    </div>
+    <div class="phase-body">
+
+      <div class="why-block">
+        <span class="why-icon">&#128161;</span>
+        <div class="why-text">The rocket silo is full. The satellite is loaded. The launch sequence runs for about 30 seconds. This is the vanilla end game - congratulations on becoming an engineer who builds factories that build rockets. The game continues if you want to megabase.</div>
+      </div>
+
+      <div class="goal-banner">
+        <span>&#127937;</span>
+        <div><strong>Phase Goal:</strong> Rocket launched with satellite. Vanilla playthrough complete.</div>
+      </div>
+
+      <div class="checklist" id="cl-15">
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Confirm the Rocket Silo shows all parts filled (watch for the rocket assembly animation inside the silo).</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Confirm the Satellite is inserted into the silo (shown in the silo GUI).</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Click <strong>Launch Rocket</strong> in the silo GUI. Stand back and watch the countdown and launch sequence.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">The rocket launches. Victory screen appears. You've completed Factorio vanilla.</div>
+        </div>
+        <div class="checklist-item" onclick="toggleTask(this)">
+          <div class="task-checkbox"></div>
+          <div class="task-text">Keep playing! The game continues. Build more silos, expand to a megabase, optimize with more modules and beacons, or just enjoy watching a factory that runs itself.</div>
+        </div>
+      </div>
+
+      <div class="milestone">
+        <span style="font-size:24px">&#128640;</span>
+        <div>
+          <strong style="color:var(--orange)">Rocket Launched - Vanilla Complete!</strong><br>
+          <span style="color:var(--text-secondary); font-size:13px">You understand automation, logistics, power, oil, robots, and modules. The Space Age DLC opens from here.</span>
+        </div>
+      </div>
+
+      <div class="callout callout-tip">
+        <span class="callout-icon">&#128161;</span>
+        <div>
+          <span class="callout-label">What's Next</span>
+          With the Space Age patch but no DLC: continue megabasing, try a speedrun attempt, try different map settings (deathworld, marathon), or play multiplayer. With Space Age DLC: you can now visit Vulcanus, Fulgora, Gleba, and Aquilo - each with entirely new challenges.
+        </div>
+      </div>
+
+      <button class="phase-complete-btn" onclick="togglePhaseComplete('15')">
+        <span>&#10003;</span> Mark Phase Complete
+      </button>
+    </div>
+  </div>
+
+  <div id="footer">
+    Factorio First Playthrough Guide - Vanilla Rocket Launch | Based on guides by multiple experienced players | Space Age Patch v2.x
+  </div>
+
+</main>
+
+<script>
+// ===== STATE MANAGEMENT =====
+const STATE_KEY = 'factorio_guide_state';
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem(STATE_KEY)) || { tasks: {}, phases: {} };
+  } catch(e) {
+    return { tasks: {}, phases: {} };
+  }
+}
+
+function saveState(state) {
+  try {
+    localStorage.setItem(STATE_KEY, JSON.stringify(state));
+  } catch(e) {}
+}
+
+let state = loadState();
+
+// ===== TASK MANAGEMENT =====
+function getTaskId(el) {
+  const card = el.closest('.phase-card');
+  const phaseId = card ? card.id : 'unknown';
+  const items = Array.from(card.querySelectorAll('.checklist-item'));
+  const idx = items.indexOf(el);
+  return `${phaseId}_task_${idx}`;
+}
+
+function toggleTask(el) {
+  const taskId = getTaskId(el);
+  const isChecked = el.classList.contains('checked');
+
+  if (isChecked) {
+    el.classList.remove('checked');
+    el.querySelector('.task-checkbox').innerHTML = '';
+    delete state.tasks[taskId];
+  } else {
+    el.classList.add('checked');
+    el.querySelector('.task-checkbox').innerHTML = '&#10003;';
+    state.tasks[taskId] = true;
+  }
+
+  saveState(state);
+  updatePhaseFromTasks(el.closest('.phase-card'));
+  updateProgress();
+}
+
+function updatePhaseFromTasks(card) {
+  if (!card) return;
+  const tasks = card.querySelectorAll('.checklist-item');
+  if (tasks.length === 0) return;
+  const allChecked = Array.from(tasks).every(t => t.classList.contains('checked'));
+
+  if (allChecked && tasks.length > 0) {
+    // Auto-complete the phase
+    const phaseNum = card.id.replace('phase-', '');
+    if (phaseNum && !isNaN(phaseNum)) {
+      markPhaseComplete(phaseNum, true);
+    }
+  }
+}
+
+// ===== PHASE MANAGEMENT =====
+function togglePhaseComplete(num) {
+  const card = document.getElementById('phase-' + num);
+  const isCompleted = card.classList.contains('completed');
+  markPhaseComplete(num, !isCompleted);
+}
+
+function markPhaseComplete(num, complete) {
+  const card = document.getElementById('phase-' + num);
+  const badge = document.getElementById('psb-' + num);
+  const sidebarCheck = document.getElementById('sc-' + num);
+  const sidebarLink = document.querySelector(`.sidebar-phase[href="#phase-${num}"]`);
+
+  if (complete) {
+    card.classList.add('completed');
+    if (badge) badge.textContent = 'Completed';
+    if (sidebarCheck) sidebarCheck.textContent = '✓';
+    if (sidebarLink) sidebarLink.classList.add('completed');
+    state.phases[num] = true;
+  } else {
+    card.classList.remove('completed');
+    if (badge) badge.textContent = 'In Progress';
+    if (sidebarCheck) sidebarCheck.textContent = '';
+    if (sidebarLink) sidebarLink.classList.remove('completed');
+    delete state.phases[num];
+  }
+
+  saveState(state);
+  updateProgress();
+}
+
+// ===== PROGRESS BAR =====
+function updateProgress() {
+  const totalPhases = 15;
+  const completedPhases = Object.keys(state.phases).filter(k => state.phases[k]).length;
+  const pct = Math.round((completedPhases / totalPhases) * 100);
+
+  document.getElementById('progress-bar-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+}
+
+// ===== COLLAPSE =====
+function toggleCollapse(header) {
+  const card = header.closest('.phase-card');
+  card.classList.toggle('collapsed');
+}
+
+// ===== SIDEBAR =====
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('visible');
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.remove('open');
+  overlay.classList.remove('visible');
+}
+
+// ===== SIDEBAR ACTIVE STATE =====
+function updateSidebarActive() {
+  const phases = document.querySelectorAll('.phase-card[id^="phase-"]');
+  const topOffset = 80;
+  let activeId = null;
+
+  phases.forEach(phase => {
+    const rect = phase.getBoundingClientRect();
+    if (rect.top <= topOffset + 20) {
+      activeId = phase.id;
+    }
+  });
+
+  document.querySelectorAll('.sidebar-phase').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  if (activeId) {
+    const num = activeId.replace('phase-', '');
+    const link = document.querySelector(`.sidebar-phase[href="#phase-${num}"]`);
+    if (link) link.classList.add('active');
+  }
+}
+
+window.addEventListener('scroll', updateSidebarActive, { passive: true });
+
+// ===== RESTORE STATE =====
+function restoreState() {
+  // Restore task states
+  document.querySelectorAll('.phase-card[id^="phase-"]').forEach(card => {
+    const tasks = card.querySelectorAll('.checklist-item');
+    tasks.forEach((task, idx) => {
+      const taskId = `${card.id}_task_${idx}`;
+      if (state.tasks[taskId]) {
+        task.classList.add('checked');
+        task.querySelector('.task-checkbox').innerHTML = '&#10003;';
+      }
+    });
+  });
+
+  // Restore phase states
+  Object.keys(state.phases).forEach(num => {
+    if (state.phases[num]) {
+      markPhaseComplete(num, true);
+    }
+  });
+
+  updateProgress();
+}
+
+// ===== IMPORT FROM MOD =====
+function openImportModal() {
+  document.getElementById('import-modal-overlay').classList.add('visible');
+  document.getElementById('import-result').textContent = '';
+  document.getElementById('import-result').className = '';
+  document.getElementById('import-file-input').value = '';
+}
+
+function closeImportModal() {
+  document.getElementById('import-modal-overlay').classList.remove('visible');
+}
+
+function closeImportModalOnOverlay(e) {
+  if (e.target === document.getElementById('import-modal-overlay')) closeImportModal();
+}
+
+function importFromMod(jsonData) {
+  const resultEl = document.getElementById('import-result');
+  try {
+    const data = (typeof jsonData === 'string') ? JSON.parse(jsonData) : jsonData;
+    if (!data.phases || typeof data.phases !== 'object') {
+      throw new Error('Invalid file: missing "phases" key.');
+    }
+
+    let imported = 0;
+
+    for (const [phaseId, phaseData] of Object.entries(data.phases)) {
+      if (!phaseData.tasks) continue;
+
+      // Map mod phase_id (e.g. "phase_1") to HTML phase number (e.g. "1")
+      const phaseNum = phaseId.replace('phase_', '');
+      const phaseCard = document.getElementById('phase-' + phaseNum);
+      if (!phaseCard) continue;
+
+      const checklistItems = phaseCard.querySelectorAll('.checklist-item');
+
+      for (const [taskId, done] of Object.entries(phaseData.tasks)) {
+        if (!done) continue;
+
+        // Match task by position index using task id suffix
+        // task ids are like "p1_mine_iron" - extract the suffix after "pN_"
+        // and match against checklist items by order using phases_def order
+        // Since we can't import phases_def in JS, we rely on the task order
+        // being consistent. We match by task index derived from the task id
+        // order within the phase entry.
+        const taskKeys = Object.keys(phaseData.tasks);
+        const taskIdx = taskKeys.indexOf(taskId);
+        if (taskIdx >= 0 && taskIdx < checklistItems.length) {
+          const item = checklistItems[taskIdx];
+          if (!item.classList.contains('checked')) {
+            item.classList.add('checked');
+            const cb = item.querySelector('.task-checkbox');
+            if (cb) cb.innerHTML = '&#10003;';
+            const taskKey = 'phase-' + phaseNum + '_task_' + taskIdx;
+            state.tasks[taskKey] = true;
+            imported++;
+          }
+        }
+      }
+
+      // If phase marked complete in mod, also check all tasks and mark phase done
+      if (phaseData.completed) {
+        // Ensure all items are checked
+        checklistItems.forEach((item, idx) => {
+          if (!item.classList.contains('checked')) {
+            item.classList.add('checked');
+            const cb = item.querySelector('.task-checkbox');
+            if (cb) cb.innerHTML = '&#10003;';
+            state.tasks['phase-' + phaseNum + '_task_' + idx] = true;
+          }
+        });
+        markPhaseComplete(phaseNum, true);
+      }
+    }
+
+    saveState(state);
+    updateProgress();
+
+    resultEl.className = '';
+    resultEl.textContent = imported + ' task(s) imported successfully' +
+      (data.player ? ' (player: ' + data.player + ')' : '') + '.';
+  } catch (err) {
+    resultEl.className = 'error';
+    resultEl.textContent = 'Error: ' + err.message;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('import-file-input').addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      importFromMod(e.target.result);
+    };
+    reader.readAsText(file);
+  });
+});
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+  restoreState();
+  updateSidebarActive();
+});
+</script>
+</body>
+</html>
