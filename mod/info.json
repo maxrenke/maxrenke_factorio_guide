@@ -1,0 +1,9 @@
+{
+  "name": "factorio-first-run-guide",
+  "version": "1.0.0",
+  "title": "First Run Guide Tracker",
+  "author": "maxrenke",
+  "description": "Tracks progress through your first vanilla Factorio playthrough. Auto-completes tasks based on in-game events.",
+  "factorio_version": "2.0",
+  "dependencies": ["base >= 2.0"]
+}
