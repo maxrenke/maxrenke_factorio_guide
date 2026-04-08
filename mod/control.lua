@@ -188,11 +188,21 @@ local function check_crafted_triggers(item_name, count, player_index)
   end
 end
 
+-- Factorio 2.0: item_production_statistics is now per-surface via get_item_production_statistics(surface)
+local function get_produced_count(force, item_name)
+  local surface = game.surfaces["nauvis"] or game.surfaces[1]
+  if not surface then return 0 end
+  local ok, stats = pcall(function() return force.get_item_production_statistics(surface) end)
+  if not ok or not stats then return 0 end
+  local ok2, count = pcall(function() return stats.get_input_count(item_name) end)
+  if ok2 and type(count) == "number" then return count end
+  return 0
+end
+
 -- Production triggers: polled every 5 seconds
 local function check_production_triggers()
   local force = game.forces["player"]
   if not force then return end
-  local stats = force.item_production_statistics
 
   for _, player in pairs(game.players) do
     if player.valid then
@@ -201,7 +211,7 @@ local function check_production_triggers()
       for _, phase in ipairs(phases_def) do
         for _, task in ipairs(phase.tasks) do
           if task.trigger.type == "produced" then
-            local produced = stats.get_input_count(task.trigger.name)
+            local produced = get_produced_count(force, task.trigger.name)
             if produced >= task.trigger.count then
               complete_task(pindex, phase.id, task.id)
             end
@@ -250,11 +260,10 @@ local function check_all_triggers_for_player(player_index)
   end
 
   -- Check production stats
-  local stats = force.item_production_statistics
   for _, phase in ipairs(phases_def) do
     for _, task in ipairs(phase.tasks) do
       if task.trigger.type == "produced" then
-        local produced = stats.get_input_count(task.trigger.name)
+        local produced = get_produced_count(force, task.trigger.name)
         if produced >= task.trigger.count then
           complete_task(player_index, phase.id, task.id)
         end
