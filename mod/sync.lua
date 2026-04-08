@@ -1,11 +1,11 @@
 local sync = {}
+local phases_def = require("phases")
 
 function sync.write_progress(player_index)
   local player = game.players[player_index]
   if not player or not storage.players[player_index] then return end
 
   local progress = storage.players[player_index]
-  local phases_def = require("phases")
 
   local lines = {}
   table.insert(lines, '{')

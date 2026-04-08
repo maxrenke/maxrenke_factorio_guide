@@ -1,4 +1,5 @@
 local gui = {}
+local phases_def = require("phases")
 
 -- ============================================================
 -- Toggle button in top bar
@@ -32,8 +33,6 @@ function gui.create_guide_frame(player)
 
   -- Remove existing frame
   destroy_if_exists(player.gui.screen["guide_tracker_frame"])
-
-  local phases_def = require("phases")
 
   -- Count completed phases
   local completed_count = 0
@@ -236,7 +235,6 @@ function gui.update_progress_label(player_index)
   local pdata = storage.players[player_index]
   if not pdata then return end
 
-  local phases_def = require("phases")
   local count = 0
   for _, phase in ipairs(phases_def) do
     if pdata.phases[phase.id] then count = count + 1 end
