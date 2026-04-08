@@ -91,7 +91,7 @@ function gui.create_guide_frame(player)
   -- Phase sections
   for _, phase in ipairs(phases_def) do
     local phase_done = pdata.phases[phase.id]
-    local is_expanded = expanded[phase.id]
+    local is_expanded = expanded[phase.id] == true
 
     -- Phase header flow
     local phase_flow = scroll.add{
