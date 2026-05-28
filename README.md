@@ -112,10 +112,12 @@ The guide content is distilled from these excellent community tutorials. All cre
 the gameplay strategies, ratios, and tips goes to their creators - please watch and support
 the originals:
 
-- **Your First Rocket in Factorio: Space Age** - https://www.youtube.com/watch?v=xy77YMCCMfk
-- **New Player's Guide - Factorio Space Age | Going from Start to Space (Walkthrough Supercut)** - https://www.youtube.com/watch?v=E7ShDWXvD4M
-- **HOW TO PLAY FACTORIO | 7000+ Hours of experience explained in 30 min** - https://www.youtube.com/watch?v=chavhzKpZwM
-- **Your First Hour in Factorio** - https://www.youtube.com/watch?v=MtypKdgWWtk
+| Channel | Title | Link |
+| --- | --- | --- |
+| [Trupen](https://www.youtube.com/channel/UC6kQdIS4TJwUURNu0NPoVgw) | Your First Rocket in Factorio: Space Age | [video](https://www.youtube.com/watch?v=xy77YMCCMfk) |
+| [Rkadindoubt](https://www.youtube.com/channel/UC6obSe9KghAkZwusQ9TsdFA) | New Player's Guide - Factorio Space Age \| Going from Start to Space (Walkthrough Supercut) | [video](https://www.youtube.com/watch?v=E7ShDWXvD4M) |
+| [Nilaus](https://www.youtube.com/channel/UCD80bzqJh1N7lOqn7n0vKTg) | HOW TO PLAY FACTORIO \| 7000+ Hours of experience explained in 30 min | [video](https://www.youtube.com/watch?v=chavhzKpZwM) |
+| [Trupen](https://www.youtube.com/channel/UC6kQdIS4TJwUURNu0NPoVgw) | Your First Hour in Factorio | [video](https://www.youtube.com/watch?v=MtypKdgWWtk) |
 
 ## Development
 
