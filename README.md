@@ -106,6 +106,17 @@ the guide.
 - Vanilla base game only - no Space Age DLC required
 - Multiplayer: each player tracks their own progress
 
+## Credits - Source Material
+
+The guide content is distilled from these excellent community tutorials. All credit for
+the gameplay strategies, ratios, and tips goes to their creators - please watch and support
+the originals:
+
+- **Your First Rocket in Factorio: Space Age** - https://www.youtube.com/watch?v=xy77YMCCMfk
+- **New Player's Guide - Factorio Space Age | Going from Start to Space (Walkthrough Supercut)** - https://www.youtube.com/watch?v=E7ShDWXvD4M
+- **HOW TO PLAY FACTORIO | 7000+ Hours of experience explained in 30 min** - https://www.youtube.com/watch?v=chavhzKpZwM
+- **Your First Hour in Factorio** - https://www.youtube.com/watch?v=MtypKdgWWtk
+
 ## Development
 
 ```bash
