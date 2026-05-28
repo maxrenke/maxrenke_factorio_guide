@@ -38,11 +38,67 @@ The companion mod tracks your in-game progress and auto-checks tasks based on ga
 
 ### Syncing with the HTML Guide
 
-1. In-game: click **Export Progress** in the Guide panel
+There are two ways to sync. Both work; pick whichever you like.
+
+#### Option A - Manual (no server, works offline)
+
+1. In-game: progress auto-exports on every task; or click **Export Progress** to force a write
 2. The file is saved to: `%AppData%\Roaming\Factorio\script-output\guide_progress.json`
-3. In the HTML guide: click **"Import from Mod"** at the top
-4. Select the `guide_progress.json` file
-5. All completed tasks will sync automatically
+3. Open `index.html` in a browser, click **"Import from Mod"** at the top
+4. Select the `guide_progress.json` file. All completed tasks sync.
+
+#### Option B - Live sync (automatic, via local server)
+
+Runs a tiny local web server that serves the guide and the mod's live progress, so
+the page updates by itself every few seconds while you play.
+
+1. Make sure Python 3 is installed (`python --version`)
+2. Start the server (any one of these):
+   - Double-click `server\start-server.bat`
+   - Or run `pwsh -File server\start-server.ps1`
+   - Or run `python server\serve.py`
+3. Your browser opens `http://localhost:8777/` automatically
+4. Play Factorio. A status badge in the top bar shows the live connection:
+   - green "Factorio connected - live" = updating in real time
+   - amber "Factorio idle" = server up, showing the last export
+   - red "Sync server unreachable" = the server isn't running (use Option A)
+
+The mod auto-exports progress and writes a heartbeat every ~5 seconds. The server
+reads those from `script-output\` and the page polls them. Factorio cannot launch the
+server or read the network itself (mod sandbox), so you start the server once - see
+auto-start below.
+
+**"Start Live Server" button:** when the page can't reach a server, a button appears in
+the top bar. Browsers can't launch programs directly, so it works via a one-time custom
+protocol registration. Run this once:
+
+```
+pwsh -File server\register-protocol.ps1      # undo with: -Unregister
+```
+
+After that, clicking **Start Live Server** launches `launch-server-silent.bat` for you;
+reload the page and it goes live. If you skip registration, the button still opens a panel
+with the exact command to run.
+
+**Why two files:** `guide_progress.json` (your task state) and `guide_heartbeat.json`
+(freshness marker the page uses to show the green/amber connection status).
+
+**Custom port / script-output path:**
+
+```
+python server\serve.py --port 9000 --script-output "D:\Factorio\script-output"
+```
+
+#### Auto-start the server on login (closest thing to "it just happens")
+
+The mod can't launch the server, but Windows can start it for you:
+
+1. Press `Win+R`, type `shell:startup`, Enter
+2. Put a shortcut to `server\start-server.bat` in that folder (add `--no-browser` to the
+   shortcut target if you don't want a browser tab each login)
+
+Now the server runs whenever you log in; just open `http://localhost:8777/` when you want
+the guide.
 
 ### Compatibility
 
