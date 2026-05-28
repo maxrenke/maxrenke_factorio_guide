@@ -664,7 +664,7 @@
   }
 
   /* IMPORT MODAL */
-  #import-modal-overlay {
+  #import-modal-overlay, #launch-modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -673,10 +673,10 @@
     align-items: center;
     justify-content: center;
   }
-  #import-modal-overlay.visible {
+  #import-modal-overlay.visible, #launch-modal-overlay.visible {
     display: flex;
   }
-  #import-modal {
+  #import-modal, #launch-modal {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -685,19 +685,19 @@
     width: 90%;
     box-shadow: 0 8px 40px rgba(0,0,0,0.7);
   }
-  #import-modal h2 {
+  #import-modal h2, #launch-modal h2 {
     font-size: 17px;
     font-weight: 700;
     color: var(--blue);
     margin-bottom: 12px;
   }
-  #import-modal p {
+  #import-modal p, #launch-modal p {
     font-size: 13px;
     color: var(--text-secondary);
     margin-bottom: 16px;
     line-height: 1.6;
   }
-  #import-modal p code {
+  #import-modal p code, #launch-modal p code {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     background: var(--bg-dark);
@@ -713,7 +713,7 @@
     font-size: 13px;
     color: var(--text-primary);
   }
-  #import-result {
+  #import-result, #launch-result {
     font-size: 13px;
     font-weight: 600;
     margin-bottom: 12px;
@@ -792,6 +792,11 @@
       <div id="progress-bar-fill"></div>
     </div>
   </div>
+  <span id="live-status" title="Live sync status" style="display:none;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:12px;white-space:nowrap;margin-right:8px;">
+    <span id="live-dot" style="width:9px;height:9px;border-radius:50%;display:inline-block;background:#888;"></span>
+    <span id="live-text">connecting...</span>
+  </span>
+  <button id="launch-server-btn" onclick="launchServer()" style="display:none;">Start Live Server</button>
   <button id="import-mod-btn" onclick="openImportModal()">Import from Mod</button>
 </div>
 
@@ -809,6 +814,30 @@
     <div id="import-result"></div>
     <div class="import-modal-buttons">
       <button onclick="closeImportModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- LAUNCH SERVER MODAL -->
+<div id="launch-modal-overlay" onclick="closeLaunchModalOnOverlay(event)">
+  <div id="launch-modal">
+    <h2>Start the Live Sync Server</h2>
+    <p>
+      Clicking <strong>Start Live Server</strong> tries to launch it automatically via a
+      one-time protocol registration. Browsers can't start programs by themselves, so if
+      nothing happens, use either method below, then refresh this page.
+    </p>
+    <p><strong>Easiest:</strong> double-click <code>server\start-server.bat</code> in the repo.</p>
+    <p><strong>Or run:</strong><br>
+      <code id="launch-cmd">python server\serve.py</code>
+      <button onclick="copyLaunchCmd()" style="margin-left:8px;">Copy</button>
+    </p>
+    <p><strong>Make this button work (one time):</strong> run
+      <code>pwsh -File server\register-protocol.ps1</code> once. After that,
+      <strong>Start Live Server</strong> launches the server directly.</p>
+    <div id="launch-result"></div>
+    <div class="import-modal-buttons">
+      <button onclick="closeLaunchModal()">Close</button>
     </div>
   </div>
 </div>
@@ -2527,8 +2556,45 @@ function closeImportModalOnOverlay(e) {
   if (e.target === document.getElementById('import-modal-overlay')) closeImportModal();
 }
 
-function importFromMod(jsonData) {
-  const resultEl = document.getElementById('import-result');
+// Maps each mod task id (from mod/phases.lua) to the 0-based index of the
+// corresponding HTML .checklist-item within its phase card (querySelectorAll
+// flattens all checklist blocks in the card, in DOM order). The mod tracks
+// coarse milestones; the HTML has finer steps, so this is an explicit
+// id -> index map rather than positional matching. Multiple mod task ids may
+// point to the same HTML item. Mod tasks with no representative HTML item
+// (p4_steel_research, p4_smelt_steel, p13_kovarex) are intentionally omitted
+// and simply won't auto-check on import.
+const MOD_TASK_MAP = {
+  phase_1:  { p1_mine_coal: 2, p1_build_drill: 4, p1_mine_iron: 7, p1_build_furnace: 6, p1_smelt_iron: 7, p1_craft_gear: 10 },
+  phase_2:  { p2_build_boiler: 1, p2_build_engine: 1, p2_build_lab: 4, p2_red_science: 5, p2_research_auto: 7 },
+  phase_3:  { p3_build_assembler: 0, p3_automate_circuits: 3, p3_red_flowing: 4, p3_green_flowing: 6, p3_research_logistics: 8 },
+  phase_4:  { p4_big_iron: 0, p4_big_copper: 1, p4_stone_bricks: 2 },
+  phase_5:  { p5_research_mil: 0, p5_build_wall: 1, p5_build_turret: 2, p5_military_flow: 5 },
+  phase_6:  { p6_oil_research: 0, p6_build_refinery: 1, p6_build_chem_plant: 4, p6_produce_plastic: 4, p6_produce_sulfur: 5, p6_produce_red_circ: 7, p6_blue_flowing: 10 },
+  phase_7:  { p7_research_robotics: 0, p7_produce_bots: 2, p7_build_roboport: 3, p7_logistic_bots: 6 },
+  phase_8:  { p8_research_solar: 0, p8_produce_batt: 1, p8_produce_solar: 2, p8_produce_accum: 3 },
+  phase_9:  { p9_upgrade_belts: 0, p9_blue_circuits: 3, p9_produce_lds: 4, p9_yellow_flowing: 6 },
+  phase_10: { p10_power_armor: 0, p10_fusion: 1, p10_personal_rob: 2, p10_log_system: 5 },
+  phase_11: { p11_research_nuke: 0, p11_research_uranium: 0, p11_build_centrifuge: 4, p11_produce_fuel: 5, p11_build_reactor: 7 },
+  phase_12: { p12_purple_flowing: 2, p12_research_prod3: 3, p12_research_beacons: 3 },
+  phase_13: { p13_prod3: 0, p13_speed3: 1, p13_build_beacon: 2 },
+  phase_14: { p14_research_silo: 0, p14_build_silo: 0, p14_rocket_fuel: 2, p14_rcu: 3, p14_lds_rocket: 4, p14_satellite: 7 },
+  phase_15: { p15_launch_rocket: 3 }
+};
+
+function checkItem(item, phaseNum, idx) {
+  if (item.classList.contains('checked')) return false;
+  item.classList.add('checked');
+  const cb = item.querySelector('.task-checkbox');
+  if (cb) cb.innerHTML = '&#10003;';
+  state.tasks['phase-' + phaseNum + '_task_' + idx] = true;
+  return true;
+}
+
+function importFromMod(jsonData, opts) {
+  opts = opts || {};
+  const silent = !!opts.silent;
+  const resultEl = silent ? null : document.getElementById('import-result');
   try {
     const data = (typeof jsonData === 'string') ? JSON.parse(jsonData) : jsonData;
     if (!data.phases || typeof data.phases !== 'object') {
@@ -2538,50 +2604,26 @@ function importFromMod(jsonData) {
     let imported = 0;
 
     for (const [phaseId, phaseData] of Object.entries(data.phases)) {
-      if (!phaseData.tasks) continue;
-
       // Map mod phase_id (e.g. "phase_1") to HTML phase number (e.g. "1")
       const phaseNum = phaseId.replace('phase_', '');
       const phaseCard = document.getElementById('phase-' + phaseNum);
       if (!phaseCard) continue;
 
       const checklistItems = phaseCard.querySelectorAll('.checklist-item');
+      const taskMap = MOD_TASK_MAP[phaseId] || {};
 
-      for (const [taskId, done] of Object.entries(phaseData.tasks)) {
-        if (!done) continue;
-
-        // Match task by position index using task id suffix
-        // task ids are like "p1_mine_iron" - extract the suffix after "pN_"
-        // and match against checklist items by order using phases_def order
-        // Since we can't import phases_def in JS, we rely on the task order
-        // being consistent. We match by task index derived from the task id
-        // order within the phase entry.
-        const taskKeys = Object.keys(phaseData.tasks);
-        const taskIdx = taskKeys.indexOf(taskId);
-        if (taskIdx >= 0 && taskIdx < checklistItems.length) {
-          const item = checklistItems[taskIdx];
-          if (!item.classList.contains('checked')) {
-            item.classList.add('checked');
-            const cb = item.querySelector('.task-checkbox');
-            if (cb) cb.innerHTML = '&#10003;';
-            const taskKey = 'phase-' + phaseNum + '_task_' + taskIdx;
-            state.tasks[taskKey] = true;
-            imported++;
-          }
+      if (phaseData.tasks) {
+        for (const [taskId, done] of Object.entries(phaseData.tasks)) {
+          if (!done) continue;
+          const idx = taskMap[taskId];
+          if (idx === undefined || idx < 0 || idx >= checklistItems.length) continue;
+          if (checkItem(checklistItems[idx], phaseNum, idx)) imported++;
         }
       }
 
-      // If phase marked complete in mod, also check all tasks and mark phase done
+      // If phase marked complete in mod, check all tasks and mark phase done.
       if (phaseData.completed) {
-        // Ensure all items are checked
-        checklistItems.forEach((item, idx) => {
-          if (!item.classList.contains('checked')) {
-            item.classList.add('checked');
-            const cb = item.querySelector('.task-checkbox');
-            if (cb) cb.innerHTML = '&#10003;';
-            state.tasks['phase-' + phaseNum + '_task_' + idx] = true;
-          }
-        });
+        checklistItems.forEach((item, idx) => checkItem(item, phaseNum, idx));
         markPhaseComplete(phaseNum, true);
       }
     }
@@ -2589,13 +2631,111 @@ function importFromMod(jsonData) {
     saveState(state);
     updateProgress();
 
-    resultEl.className = '';
-    resultEl.textContent = imported + ' task(s) imported successfully' +
-      (data.player ? ' (player: ' + data.player + ')' : '') + '.';
+    if (resultEl) {
+      resultEl.className = '';
+      resultEl.textContent = imported + ' task(s) imported successfully' +
+        (data.player ? ' (player: ' + data.player + ')' : '') + '.';
+    }
+    return imported;
   } catch (err) {
-    resultEl.className = 'error';
-    resultEl.textContent = 'Error: ' + err.message;
+    if (resultEl) {
+      resultEl.className = 'error';
+      resultEl.textContent = 'Error: ' + err.message;
+    }
+    return 0;
   }
+}
+
+// ===== LIVE SYNC (when served by server/serve.py over http) =====
+// When the page is opened directly as a file, this stays off and you use the
+// manual "Import from Mod" button. When served over http by the local server,
+// it polls the mod's live progress and updates automatically.
+const LIVE_SYNC = location.protocol === 'http:' || location.protocol === 'https:';
+
+function setLiveStatus(state, text) {
+  const badge = document.getElementById('live-status');
+  const dot = document.getElementById('live-dot');
+  const txt = document.getElementById('live-text');
+  if (!badge) return;
+  badge.style.display = 'inline-flex';
+  const colors = { connected: '#3fb950', idle: '#d29922', error: '#f85149', off: '#6e7681' };
+  const bg = { connected: 'rgba(63,185,80,.15)', idle: 'rgba(210,153,34,.15)', error: 'rgba(248,81,73,.15)', off: 'rgba(110,118,129,.15)' };
+  dot.style.background = colors[state] || '#888';
+  badge.style.background = bg[state] || 'transparent';
+  badge.style.color = colors[state] || '#888';
+  txt.textContent = text;
+}
+
+function showLaunchBtn(show) {
+  const b = document.getElementById('launch-server-btn');
+  if (b) b.style.display = show ? 'inline-block' : 'none';
+}
+
+async function livePoll() {
+  try {
+    const s = await fetch('/status', { cache: 'no-store' }).then(r => r.json());
+    if (s.connected) {
+      setLiveStatus('connected', 'Factorio connected - live');
+    } else if (s.progress_exists) {
+      setLiveStatus('idle', 'Server up - Factorio idle (showing last export)');
+    } else {
+      setLiveStatus('idle', 'Server up - waiting for Factorio');
+    }
+    showLaunchBtn(false);  // server is reachable, no need to launch
+    const res = await fetch('/progress.json', { cache: 'no-store' });
+    if (res.ok) {
+      const data = await res.json();
+      importFromMod(data, { silent: true });
+    }
+  } catch (e) {
+    setLiveStatus('error', 'Sync server unreachable');
+    showLaunchBtn(true);
+  }
+}
+
+function startLiveSync() {
+  if (!LIVE_SYNC) {
+    // Opened as a plain file: live sync unavailable. Offer to launch the server.
+    showLaunchBtn(true);
+    return;
+  }
+  setLiveStatus('off', 'connecting...');
+  livePoll();
+  setInterval(livePoll, 5000);
+}
+
+// ===== LAUNCH SERVER BUTTON =====
+function launchServer() {
+  // Attempt the registered custom protocol (works after register-protocol.ps1).
+  try { window.location.href = 'factorio-guide://start'; } catch (e) {}
+  // Always show the fallback instructions in case the protocol isn't registered.
+  openLaunchModal();
+  const r = document.getElementById('launch-result');
+  if (r) { r.textContent = 'If a server window did not open, follow a step below, then reload this page.'; }
+}
+
+function openLaunchModal() {
+  document.getElementById('launch-modal-overlay').classList.add('visible');
+}
+function closeLaunchModal() {
+  document.getElementById('launch-modal-overlay').classList.remove('visible');
+}
+function closeLaunchModalOnOverlay(e) {
+  if (e.target === document.getElementById('launch-modal-overlay')) closeLaunchModal();
+}
+function copyLaunchCmd() {
+  const txt = document.getElementById('launch-cmd').textContent;
+  const r = document.getElementById('launch-result');
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(
+        () => { if (r) r.textContent = 'Command copied to clipboard.'; },
+        () => { if (r) r.textContent = 'Copy failed - select the command and copy manually.'; }
+      );
+      return;
+    }
+  } catch (e) {}
+  if (r) r.textContent = 'Copy unavailable here - select the command above and copy manually.';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2614,6 +2754,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
   restoreState();
   updateSidebarActive();
+  startLiveSync();
 });
 </script>
 </body>
