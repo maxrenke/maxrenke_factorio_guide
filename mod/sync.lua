@@ -7,10 +7,12 @@ function sync.write_progress(player_index)
 
   local progress = storage.players[player_index]
 
+  local safe_name = player.name:gsub('\\', '\\\\'):gsub('"', '\\"')
+
   local lines = {}
   table.insert(lines, '{')
   table.insert(lines, '  "version": "1.0.0",')
-  table.insert(lines, '  "player": "' .. player.name .. '",')
+  table.insert(lines, '  "player": "' .. safe_name .. '",')
   table.insert(lines, '  "exported_tick": ' .. game.tick .. ',')
   table.insert(lines, '  "phases": {')
 
@@ -39,6 +41,19 @@ function sync.write_progress(player_index)
   local json_str = table.concat(lines, '\n')
   helpers.write_file("guide_progress.json", json_str, false)
   player.print("[Guide] Progress exported to script-output/guide_progress.json")
+end
+
+-- Heartbeat: written periodically so the local server / webpage can detect
+-- whether Factorio is running and the mod is active. The mod cannot read files
+-- or reach the network, so connection verification happens browser-side off the
+-- freshness (mtime) of this file.
+function sync.write_heartbeat()
+  local n = 0
+  for _, p in pairs(game.players) do
+    if p.connected then n = n + 1 end
+  end
+  local hb = '{ "tick": ' .. game.tick .. ', "players_online": ' .. n .. ' }'
+  helpers.write_file("guide_heartbeat.json", hb, false)
 end
 
 return sync

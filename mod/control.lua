@@ -114,7 +114,9 @@ local function complete_task(player_index, phase_id, task_id)
       end
     end
     if all_done then
-      complete_phase(player_index, phase_id)
+      complete_phase(player_index, phase_id)  -- this also writes progress
+    else
+      sync.write_progress(player_index)        -- auto-export on every task
     end
   end
 end
@@ -420,6 +422,7 @@ end)
 
 script.on_nth_tick(300, function(event)
   check_production_triggers()
+  sync.write_heartbeat()
 end)
 
 script.on_event(defines.events.on_gui_click, on_gui_click)
