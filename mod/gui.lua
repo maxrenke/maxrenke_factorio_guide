@@ -73,7 +73,7 @@ function gui.create_guide_frame(player)
 
   local progress_label = topbar.add{
     type    = "label",
-    caption = "Progress: " .. completed_count .. " / 15 phases complete",
+    caption = "Progress: " .. completed_count .. " / " .. #phases_def .. " phases complete",
     name    = "guide_tracker_progress_label",
   }
   progress_label.style.font = "default-bold"
@@ -252,11 +252,11 @@ function gui.update_progress_label(player_index)
     if pdata.phases[phase.id] then count = count + 1 end
   end
 
-  local topbar = frame.children[1]
+  local topbar = frame.children[2]
   if topbar then
     local lbl = topbar["guide_tracker_progress_label"]
     if lbl and lbl.valid then
-      lbl.caption = "Progress: " .. count .. " / 15 phases complete"
+      lbl.caption = "Progress: " .. count .. " / " .. #phases_def .. " phases complete"
     end
   end
 end

@@ -1,7 +1,7 @@
 local sync = {}
 local phases_def = require("phases")
 
-function sync.write_progress(player_index)
+function sync.write_progress(player_index, silent)
   local player = game.players[player_index]
   if not player or not storage.players[player_index] then return end
 
@@ -40,7 +40,9 @@ function sync.write_progress(player_index)
 
   local json_str = table.concat(lines, '\n')
   helpers.write_file("guide_progress.json", json_str, false)
-  player.print("[Guide] Progress exported to script-output/guide_progress.json")
+  if not silent then
+    player.print("[Guide] Progress exported to script-output/guide_progress.json")
+  end
 end
 
 -- Heartbeat: written periodically so the local server / webpage can detect

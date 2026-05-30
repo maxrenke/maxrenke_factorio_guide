@@ -49,7 +49,7 @@ local function get_task_def(phase_id, task_id)
   return nil, nil
 end
 
-local function complete_phase(player_index, phase_id)
+local function complete_phase(player_index, phase_id, silent)
   local pdata = storage.players[player_index]
   if not pdata then return end
   if pdata.phases[phase_id] then return end  -- already done
@@ -57,7 +57,7 @@ local function complete_phase(player_index, phase_id)
   pdata.phases[phase_id] = true
 
   local player = game.players[player_index]
-  if player and player.valid then
+  if player and player.valid and not silent then
     -- Find phase name
     for _, phase in ipairs(phases_def) do
       if phase.id == phase_id then
@@ -68,10 +68,10 @@ local function complete_phase(player_index, phase_id)
   end
 
   gui.rebuild_gui(player_index)
-  sync.write_progress(player_index)
+  sync.write_progress(player_index, true)
 end
 
-local function complete_task(player_index, phase_id, task_id)
+local function complete_task(player_index, phase_id, task_id, silent)
   local pdata = storage.players[player_index]
   if not pdata then return end
 
@@ -82,7 +82,7 @@ local function complete_task(player_index, phase_id, task_id)
 
   -- Notify player
   local player = game.players[player_index]
-  if player and player.valid then
+  if player and player.valid and not silent then
     local _, task = get_task_def(phase_id, task_id)
     if task then
       player.create_local_flying_text{
@@ -114,9 +114,9 @@ local function complete_task(player_index, phase_id, task_id)
       end
     end
     if all_done then
-      complete_phase(player_index, phase_id)  -- this also writes progress
+      complete_phase(player_index, phase_id, silent)  -- this also writes progress
     else
-      sync.write_progress(player_index)        -- auto-export on every task
+      sync.write_progress(player_index, true)         -- auto-export on every task (silent)
     end
   end
 end
@@ -255,7 +255,7 @@ local function check_all_triggers_for_player(player_index)
       if task.trigger.type == "tech" then
         local tech = force.technologies[task.trigger.name]
         if tech and tech.researched then
-          complete_task(player_index, phase.id, task.id)
+          complete_task(player_index, phase.id, task.id, true)
         end
       end
     end
@@ -267,7 +267,7 @@ local function check_all_triggers_for_player(player_index)
       if task.trigger.type == "produced" then
         local produced = get_produced_count(force, task.trigger.name)
         if produced >= task.trigger.count then
-          complete_task(player_index, phase.id, task.id)
+          complete_task(player_index, phase.id, task.id, true)
         end
       end
     end
