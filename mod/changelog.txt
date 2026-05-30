@@ -1,0 +1,8 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 2026-05-30
+  Features:
+    - In-game tracker panel with 15 phases from crash-landing to rocket launch.
+    - Auto-completes tasks from research, building placement, item crafting, production stats, and rocket launch.
+    - Manual checkboxes for any task.
+    - Exports progress to script-output/guide_progress.json plus a heartbeat for the companion HTML guide.

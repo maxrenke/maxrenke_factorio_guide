@@ -2,3 +2,4 @@ transcripts/
 *.tmp
 __pycache__/
 *.pyc
+dist/

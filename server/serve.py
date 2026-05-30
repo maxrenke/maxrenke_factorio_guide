@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Local sync server for the Factorio First Run Guide.
+Local sync server for the Factorio Vanilla Progress Guide.
 
 Serves index.html and exposes the mod's live progress so the webpage can
 auto-poll and update in real time. Factorio mods cannot launch processes or

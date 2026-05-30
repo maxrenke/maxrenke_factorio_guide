@@ -10,7 +10,7 @@ function gui.create_toggle_button(player)
     type    = "button",
     name    = "guide_tracker_toggle_btn",
     caption = "Guide",
-    tooltip = "Toggle First Run Guide Tracker",
+    tooltip = "Toggle Vanilla Progress Guide tracker",
   }
 end
 
@@ -61,7 +61,7 @@ function gui.create_guide_frame(player)
 
   local title = titlebar.add{
     type    = "label",
-    caption = "First Run Guide - Vanilla Rocket Launch",
+    caption = "Vanilla Progress Guide - Rocket Launch",
     ignored_by_interaction = true,
   }
   title.style.font = "default-bold"

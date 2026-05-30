@@ -1,4 +1,4 @@
-# Factorio First Run Guide
+# Factorio Vanilla Progress Guide
 
 Interactive HTML guide + companion Factorio mod for your first vanilla playthrough (Space Age patch, no DLC).
 
@@ -18,8 +18,8 @@ The companion mod tracks your in-game progress and auto-checks tasks based on ga
 
 1. Copy the `mod/` folder to your Factorio mods directory:
    - Windows: `%AppData%\Roaming\Factorio\mods\`
-   - Rename the folder to: `factorio-first-run-guide_1.0.0`
-   - So the full path is: `%AppData%\Roaming\Factorio\mods\factorio-first-run-guide_1.0.0\`
+   - Rename the folder to: `vanilla-progress-guide_1.0.0`
+   - So the full path is: `%AppData%\Roaming\Factorio\mods\vanilla-progress-guide_1.0.0\`
 
 2. Launch Factorio and enable the mod in the Mods menu
 
@@ -123,5 +123,32 @@ the originals:
 
 ```bash
 # Install mod for dev (symlink from repo to Factorio mods folder)
-mklink /D "%AppData%\Roaming\Factorio\mods\factorio-first-run-guide_1.0.0" "C:\Users\<you>\repos\maxrenke_factorio_guide\mod"
+mklink /D "%AppData%\Roaming\Factorio\mods\vanilla-progress-guide_1.0.0" "C:\Users\<you>\repos\maxrenke_factorio_guide\mod"
 ```
+
+## Publishing to the Factorio Mod Portal
+
+The mod is portal-ready. To build and upload:
+
+1. Build the zip:
+   ```
+   pwsh -File build-mod.ps1
+   ```
+   This produces `dist\vanilla-progress-guide_1.0.0.zip` containing a single top
+   folder `vanilla-progress-guide_1.0.0\` with `info.json` at its root (the structure
+   the portal requires). The HTML guide and server are NOT included - the mod is
+   standalone.
+
+2. Sign in at https://mods.factorio.com/ with your Factorio.com account.
+
+3. Click **Upload a Mod**, fill in the details (the `name` field must match
+   `vanilla-progress-guide` and is permanent), select the **MIT** license, and upload
+   the zip. The portal reads `title`, `description`, `thumbnail.png`, and
+   `changelog.txt` from inside the zip.
+
+4. For later updates: bump `version` in `mod/info.json`, add a matching block to
+   `mod/changelog.txt`, re-run `build-mod.ps1`, and upload the new zip to the same
+   mod page.
+
+What ships in the zip: `control.lua`, `gui.lua`, `phases.lua`, `sync.lua`,
+`info.json`, `changelog.txt`, `thumbnail.png`, `LICENSE`.
