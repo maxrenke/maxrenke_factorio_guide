@@ -1,0 +1,101 @@
+================================================================================
+ FACTORIO MOD PORTAL LISTING - vanilla-progress-guide
+================================================================================
+Everything you paste into https://mods.factorio.com/upload and the mod's Edit
+page. Fields marked [from zip] are read automatically from info.json /
+changelog.txt / thumbnail.png inside the uploaded zip - you do NOT retype them.
+
+--------------------------------------------------------------------------------
+ UPLOAD-FORM FIELDS
+--------------------------------------------------------------------------------
+Internal name [from zip] : vanilla-progress-guide      (PERMANENT, must be unique)
+Display title [from zip] : Vanilla Progress Guide
+Author        [from zip] : maxrenke
+Version       [from zip] : 1.0.0
+Factorio ver. [from zip] : 2.0
+License                  : MIT
+Category                 : Helper Mods        (closest fit; also fine: Utilities)
+Tags                     : Info, GUI, Manufacturing
+Source URL               : https://github.com/maxrenke/maxrenke_factorio_guide
+Homepage URL             : https://github.com/maxrenke/maxrenke_factorio_guide
+
+--------------------------------------------------------------------------------
+ SHORT DESCRIPTION  (the one-liner under the title; this is info.json "description")
+--------------------------------------------------------------------------------
+A guided checklist for a vanilla base-game playthrough, from crash-landing to
+rocket launch. Auto-completes tasks from in-game events and exports progress to a
+companion HTML guide.
+
+--------------------------------------------------------------------------------
+ LONG DESCRIPTION  (paste into the mod page; portal renders Markdown)
+--------------------------------------------------------------------------------
+## Vanilla Progress Guide
+
+A first-playthrough checklist that lives in your game. It breaks the road to your
+first rocket into **15 ordered phases** - from mining your first iron to launching
+a satellite - and ticks tasks off **automatically** as you play.
+
+Built for new players doing a **vanilla** (base game, no Space Age DLC) run on the
+2.0 engine. No hand-holding tooltips spamming your screen - just a quiet tracker
+panel you open when you want to know "what's next?".
+
+### Features
+- **15-phase roadmap** covering power, the science chain (red -> green -> blue ->
+  military -> yellow -> purple), oil, robots, solar, nuclear, modules/beacons, and
+  the rocket silo.
+- **Auto-completing tasks.** Research a tech, place a building, craft an item, or
+  hit a production milestone and the matching task checks itself.
+- **Manual checkboxes** for anything you'd rather track by hand.
+- **Per-phase progress** with a clear "X / 15 phases complete" readout.
+- **Multiplayer aware** - each player tracks their own progress.
+- **Companion HTML guide.** The mod exports your progress to a JSON file; an
+  included single-file web guide (with deeper explanations, ratios, and new-player
+  traps) can import it - or sync live via a tiny optional local server.
+
+### How to use
+1. Enable the mod and start or load a save.
+2. Click the **Guide** button in the top toolbar to open the tracker.
+3. Play. Tasks tick themselves; click any checkbox to set it manually.
+4. (Optional) Click **Export Progress** to write a JSON file, then open the HTML
+   guide and **Import from Mod** to see the richer companion walkthrough.
+
+### Scope
+This is a **vanilla, base-game, rocket-launch** guide. It intentionally stops at
+the vanilla victory - the Space Age DLC planets are out of scope.
+
+### Credits
+Guide content is distilled from community tutorials by Trupen, Rkadindoubt, and
+Nilaus - full credits and links are in the GitHub README.
+
+--------------------------------------------------------------------------------
+ FAQ  (optional - append to the long description if you like)
+--------------------------------------------------------------------------------
+**Does this need the Space Age DLC?** No. It targets vanilla base game on 2.0.
+The mod has no DLC dependency.
+
+**Will it spoil the game?** It tells you the order of milestones, not how to build
+each one. Think roadmap, not blueprint book.
+
+**Does it change gameplay?** No recipes, entities, or balance are touched. It only
+reads game state and shows a panel.
+
+**Multiplayer?** Yes - progress is tracked per player.
+
+**Where is the exported file?** %AppData%\Roaming\Factorio\script-output\guide_progress.json
+
+--------------------------------------------------------------------------------
+ SCREENSHOT CAPTIONS  (upload images on the mod page; suggested captions)
+--------------------------------------------------------------------------------
+1. The tracker panel open in-game, mid-playthrough.
+2. A phase expanded to show its task checklist.
+3. The companion HTML guide showing the same progress.
+4. Live-sync status badge updating while playing.
+
+--------------------------------------------------------------------------------
+ NOTES
+--------------------------------------------------------------------------------
+- Verify the internal name is free first: open
+  https://mods.factorio.com/mod/vanilla-progress-guide  (a 404 = available).
+- The thumbnail (mod/thumbnail.png, 256x256) ships inside the zip; no separate
+  upload needed, though you can replace it on the page.
+- Portal categories/tags can be changed later; the internal name cannot.

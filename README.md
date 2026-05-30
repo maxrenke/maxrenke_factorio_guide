@@ -134,10 +134,14 @@ steps with links:
 ```
 pwsh -File publish.ps1                 # first publish: build + checklist
 pwsh -File publish.ps1 -OpenPortal     # also open the portal in your browser
-pwsh -File publish.ps1 -Update         # after code changes: bump version + changelog, rebuild
+pwsh -File publish.ps1 -Update         # after code changes: prompts for changelog, bumps version, rebuilds
+pwsh -File publish.ps1 -Update -FromGit            # changelog auto-generated from git commits since last release
+pwsh -File publish.ps1 -Update -Change "Fixed X"   # override: use these entries verbatim (non-interactive)
 ```
 
-The manual steps it automates are below.
+The manual steps it automates are below. Ready-to-paste portal page content
+(title, summary, long description, FAQ, tags, captions) is in
+`mod-portal-listing.txt`.
 
 The mod is portal-ready. To build and upload:
 
