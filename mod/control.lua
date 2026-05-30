@@ -125,72 +125,8 @@ end
 -- Trigger checkers
 -- ============================================================
 
--- Tech triggers: apply to all players (research is force-wide)
-local function check_tech_triggers(tech_name)
-  for _, player in pairs(game.players) do
-    if player.valid then
-      local pindex = player.index
-      init_player(pindex)
-      for _, phase in ipairs(phases_def) do
-        for _, task in ipairs(phase.tasks) do
-          if task.trigger.type == "tech" and task.trigger.name == tech_name then
-            complete_task(pindex, phase.id, task.id)
-          end
-        end
-      end
-    end
-  end
-end
-
--- Built triggers: apply to specific player (or all if no player)
-local function check_built_triggers(entity_name, player_index)
-  if player_index then
-    init_player(player_index)
-    for _, phase in ipairs(phases_def) do
-      for _, task in ipairs(phase.tasks) do
-        if task.trigger.type == "built" and task.trigger.name == entity_name then
-          complete_task(player_index, phase.id, task.id)
-        end
-      end
-    end
-  else
-    -- Robot built - apply to all players (pick first connected player as owner)
-    for _, player in pairs(game.players) do
-      if player.valid then
-        local pindex = player.index
-        init_player(pindex)
-        for _, phase in ipairs(phases_def) do
-          for _, task in ipairs(phase.tasks) do
-            if task.trigger.type == "built" and task.trigger.name == entity_name then
-              complete_task(pindex, phase.id, task.id)
-            end
-          end
-        end
-      end
-    end
-  end
-end
-
--- Crafted triggers: cumulative per player
-local function check_crafted_triggers(item_name, count, player_index)
-  init_player(player_index)
-  local pdata = storage.players[player_index]
-  pdata.crafted_counts[item_name] = (pdata.crafted_counts[item_name] or 0) + count
-
-  local total = pdata.crafted_counts[item_name]
-  for _, phase in ipairs(phases_def) do
-    for _, task in ipairs(phase.tasks) do
-      if task.trigger.type == "crafted"
-        and task.trigger.name == item_name
-        and total >= task.trigger.count
-      then
-        complete_task(player_index, phase.id, task.id)
-      end
-    end
-  end
-end
-
--- Factorio 2.0: item_production_statistics is now per-surface via get_item_production_statistics(surface)
+-- Factorio 2.0: item production statistics are per-surface via
+-- get_item_production_statistics(surface). Vanilla/rocket scope = nauvis only.
 local function get_produced_count(force, item_name)
   local surface = game.surfaces["nauvis"] or game.surfaces[1]
   if not surface then return 0 end
@@ -201,77 +137,93 @@ local function get_produced_count(force, item_name)
   return 0
 end
 
+-- Complete every task for which predicate(task) is true, for one player.
+local function complete_matching(player_index, predicate, silent)
+  init_player(player_index)
+  for _, phase in ipairs(phases_def) do
+    for _, task in ipairs(phase.tasks) do
+      if predicate(task) then
+        complete_task(player_index, phase.id, task.id, silent)
+      end
+    end
+  end
+end
+
+-- Same, for every valid player (force-wide events: tech, robot build, rocket).
+local function complete_matching_all(predicate, silent)
+  for _, player in pairs(game.players) do
+    if player.valid then
+      complete_matching(player.index, predicate, silent)
+    end
+  end
+end
+
+-- Tech triggers: research is force-wide -> all players
+local function check_tech_triggers(tech_name)
+  complete_matching_all(function(t)
+    return t.trigger.type == "tech" and t.trigger.name == tech_name
+  end)
+end
+
+-- Built triggers: a specific player, or all players for robot builds
+local function check_built_triggers(entity_name, player_index)
+  local pred = function(t)
+    return t.trigger.type == "built" and t.trigger.name == entity_name
+  end
+  if player_index then
+    complete_matching(player_index, pred)
+  else
+    complete_matching_all(pred)
+  end
+end
+
+-- Crafted triggers: cumulative per player
+local function check_crafted_triggers(item_name, count, player_index)
+  init_player(player_index)
+  local pdata = storage.players[player_index]
+  pdata.crafted_counts[item_name] = (pdata.crafted_counts[item_name] or 0) + count
+  local total = pdata.crafted_counts[item_name]
+  complete_matching(player_index, function(t)
+    return t.trigger.type == "crafted" and t.trigger.name == item_name and total >= t.trigger.count
+  end)
+end
+
 -- Production triggers: polled every 5 seconds
 local function check_production_triggers()
   local force = game.forces["player"]
   if not force then return end
-
   for _, player in pairs(game.players) do
     if player.valid then
-      local pindex = player.index
-      init_player(pindex)
-      for _, phase in ipairs(phases_def) do
-        for _, task in ipairs(phase.tasks) do
-          if task.trigger.type == "produced" then
-            local produced = get_produced_count(force, task.trigger.name)
-            if produced >= task.trigger.count then
-              complete_task(pindex, phase.id, task.id)
-            end
-          end
-        end
-      end
+      complete_matching(player.index, function(t)
+        return t.trigger.type == "produced"
+          and get_produced_count(force, t.trigger.name) >= t.trigger.count
+      end)
     end
   end
 end
 
 -- Rocket trigger: apply to all players
 local function complete_rocket_task()
-  for _, player in pairs(game.players) do
-    if player.valid then
-      local pindex = player.index
-      init_player(pindex)
-      for _, phase in ipairs(phases_def) do
-        for _, task in ipairs(phase.tasks) do
-          if task.trigger.type == "rocket" then
-            complete_task(pindex, phase.id, task.id)
-          end
-        end
-      end
-    end
-  end
+  complete_matching_all(function(t) return t.trigger.type == "rocket" end)
 end
 
 -- ============================================================
--- Catch-up: run all checks for a player on join/init
+-- Catch-up: run all checks for a player on join/init (silent)
 -- ============================================================
 local function check_all_triggers_for_player(player_index)
   local player = game.players[player_index]
   if not player or not player.valid then return end
-
-  -- Check researched techs
   local force = player.force
-  for _, phase in ipairs(phases_def) do
-    for _, task in ipairs(phase.tasks) do
-      if task.trigger.type == "tech" then
-        local tech = force.technologies[task.trigger.name]
-        if tech and tech.researched then
-          complete_task(player_index, phase.id, task.id, true)
-        end
-      end
-    end
-  end
 
-  -- Check production stats
-  for _, phase in ipairs(phases_def) do
-    for _, task in ipairs(phase.tasks) do
-      if task.trigger.type == "produced" then
-        local produced = get_produced_count(force, task.trigger.name)
-        if produced >= task.trigger.count then
-          complete_task(player_index, phase.id, task.id, true)
-        end
-      end
+  complete_matching(player_index, function(t)
+    if t.trigger.type == "tech" then
+      local tech = force.technologies[t.trigger.name]
+      return tech and tech.researched or false
+    elseif t.trigger.type == "produced" then
+      return get_produced_count(force, t.trigger.name) >= t.trigger.count
     end
-  end
+    return false
+  end, true)
 end
 
 -- ============================================================

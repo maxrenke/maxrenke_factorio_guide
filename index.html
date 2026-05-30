@@ -1997,9 +1997,10 @@
         <span class="callout-icon">&#9881;</span>
         <div>
           <span class="callout-label">Key Ratio - Nuclear Power</span>
-          Per reactor (with neighbor bonuses in 2x2):<br>
-          <code>1 Reactor (160 MW effective) : 8 Heat Exchangers : 14 Steam Turbines</code><br>
-          8-reactor plant needs 10+ lanes of water. Place near water, not near uranium.
+          Per reactor in a 2x2 array (120 MW effective each):<br>
+          <code>1 Reactor : 12 Heat Exchangers : 21 Steam Turbines</code><br>
+          So the full 4-reactor array (480 MW) needs ~48 heat exchangers and ~83 turbines.
+          Place near water, not near uranium - heat exchangers drink enormous amounts of it.
         </div>
       </div>
 
@@ -2437,6 +2438,7 @@ function togglePhaseComplete(num) {
 
 function markPhaseComplete(num, complete) {
   const card = document.getElementById('phase-' + num);
+  if (!card) return;
   const badge = document.getElementById('psb-' + num);
   const sidebarCheck = document.getElementById('sc-' + num);
   const sidebarLink = document.querySelector(`.sidebar-phase[href="#phase-${num}"]`);
@@ -2461,8 +2463,9 @@ function markPhaseComplete(num, complete) {
 
 // ===== PROGRESS BAR =====
 function updateProgress() {
-  const totalPhases = 15;
-  const completedPhases = Object.keys(state.phases).filter(k => state.phases[k]).length;
+  const phaseCards = document.querySelectorAll('.phase-card[id^="phase-"]');
+  const totalPhases = phaseCards.length || 1;
+  const completedPhases = document.querySelectorAll('.phase-card[id^="phase-"].completed').length;
   const pct = Math.round((completedPhases / totalPhases) * 100);
 
   document.getElementById('progress-bar-fill').style.width = pct + '%';
@@ -2652,7 +2655,7 @@ function importFromMod(jsonData, opts) {
 // it polls the mod's live progress and updates automatically.
 const LIVE_SYNC = location.protocol === 'http:' || location.protocol === 'https:';
 
-function setLiveStatus(state, text) {
+function setLiveStatus(level, text) {
   const badge = document.getElementById('live-status');
   const dot = document.getElementById('live-dot');
   const txt = document.getElementById('live-text');
@@ -2660,9 +2663,9 @@ function setLiveStatus(state, text) {
   badge.style.display = 'inline-flex';
   const colors = { connected: '#3fb950', idle: '#d29922', error: '#f85149', off: '#6e7681' };
   const bg = { connected: 'rgba(63,185,80,.15)', idle: 'rgba(210,153,34,.15)', error: 'rgba(248,81,73,.15)', off: 'rgba(110,118,129,.15)' };
-  dot.style.background = colors[state] || '#888';
-  badge.style.background = bg[state] || 'transparent';
-  badge.style.color = colors[state] || '#888';
+  dot.style.background = colors[level] || '#888';
+  badge.style.background = bg[level] || 'transparent';
+  badge.style.color = colors[level] || '#888';
   txt.textContent = text;
 }
 

@@ -160,10 +160,27 @@ as a separate scoped effort.**
    p4_steel_research, p4_smelt_steel, p13_kovarex) intentionally don't auto-check.
 2. [P0][DONE] Escape strings in sync.lua JSON. Added `safe_name` gsub for `\` and `"`
    before interpolating player name.
-3. [P1] Reconcile Phase 11 nuclear power numbers (per-reactor vs per-array). NOT done.
-4. [P1] Drive "15 phases" and title strings from data, not hardcoded literals (mod + HTML).
-   NOT done.
+3. [P1][DONE] Reconcile Phase 11 nuclear power numbers. Rewrote the ratio callout on a
+   single consistent 2x2 basis: per reactor 120 MW = 12 heat exchangers : 21 turbines;
+   full 4-reactor array 480 MW = ~48 exchangers : ~83 turbines (matches the 480 MW line
+   already in the phase tasks).
+4. [P1][DONE] Drive phase count from data, not hardcoded literals.
+   - Mod: gui.lua uses #phases_def in both progress captions.
+   - HTML: updateProgress() derives totalPhases and completed count from the DOM
+     (.phase-card[id^="phase-"] / .completed) instead of the literal 15 and stale
+     state.phases keys.
 5. [P2] Add import integrity warning on count mismatch (defense in depth). NOT done
    (the id-map fix makes silent mis-checking impossible, lowering urgency).
 6. [P2] Multi-surface production stats in control.lua (only if Space Age expansion happens).
-7. [Decision] Vanilla-polish vs Space-Age-expansion (separate planning doc).
+7. [Decision][RESOLVED] Vanilla-polish chosen. The HTML is explicitly vanilla-scoped
+   (title/subtitle "vanilla only. No DLC content", tags, Phase 15 frames DLC as an
+   optional next step) and info.json now says "vanilla base-game". Space Age expansion
+   remains a separate future effort.
+
+## Code-quality follow-ups (this pass)
+- control.lua: the 5 duplicated phase/task trigger loops collapsed into two shared
+  helpers (complete_matching / complete_matching_all) + thin per-event predicates.
+- HTML: setLiveStatus() param renamed level (was shadowing the global state object);
+  markPhaseComplete() null-guards a missing card so stale localStorage can't crash restore.
+- Auto-uncomplete of a phase on task-uncheck intentionally NOT added: per-phase manual
+  "complete" buttons exist, so reverting would undo deliberate manual completions.
