@@ -352,14 +352,16 @@ end)
 
 script.on_event(defines.events.on_built_entity, function(event)
   local pindex = event.player_index
-  if pindex then
+  if pindex and event.entity and event.entity.valid then
     check_built_triggers(event.entity.name, pindex)
   end
 end)
 
 script.on_event(defines.events.on_robot_built_entity, function(event)
   -- Robots build for the force; apply to all players
-  check_built_triggers(event.entity.name, nil)
+  if event.entity and event.entity.valid then
+    check_built_triggers(event.entity.name, nil)
+  end
 end)
 
 script.on_event(defines.events.on_player_crafted_item, function(event)

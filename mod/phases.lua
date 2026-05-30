@@ -10,7 +10,7 @@ local phases = {
       { id = "p1_build_drill", text = "Place your first Burner Mining Drill", trigger = { type = "built",    name = "burner-mining-drill"               } },
       { id = "p1_build_furnace", text = "Place a Stone Furnace",           trigger = { type = "built",    name = "stone-furnace"                     } },
       { id = "p1_smelt_iron",  text = "Smelt 50 iron plates",              trigger = { type = "produced", name = "iron-plate",         count = 50  } },
-      { id = "p1_craft_gear",  text = "Craft iron gear wheels",            trigger = { type = "crafted",  name = "iron-gear-wheel",    count = 1   } },
+      { id = "p1_craft_gear",  text = "Craft iron gear wheels",            trigger = { type = "produced", name = "iron-gear-wheel",    count = 1   } },
     },
   },
 
