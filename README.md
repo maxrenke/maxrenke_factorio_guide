@@ -4,11 +4,22 @@ Interactive HTML guide + companion Factorio mod for your first vanilla playthrou
 
 ## HTML Guide
 
-Open `index.html` in any browser. No server needed.
+A single-file interactive walkthrough that pairs with the mod. It is not bundled in
+the mod download - get it here:
+
+- **Easiest:** click the green **Code** button at the top of this repo -> **Download ZIP**,
+  unzip, and open `index.html` in any browser.
+- **Or** open [`index.html`](index.html) in the file list above, click **Download raw file**
+  (the download icon), then open the saved file in your browser.
+- **Or** clone: `git clone https://github.com/maxrenke/maxrenke_factorio_guide.git`
+
+Then just open `index.html` - no server needed.
 
 - Check off tasks as you complete them
 - Progress saves automatically in your browser (localStorage)
 - 15 phases from crash-landing to rocket launch
+- Pull your in-game progress in via **Import from Mod** (manual) or the live server
+  (see Syncing below)
 
 ## Factorio Mod
 

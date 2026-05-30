@@ -48,16 +48,23 @@ panel you open when you want to know "what's next?".
 - **Manual checkboxes** for anything you'd rather track by hand.
 - **Per-phase progress** with a clear "X / 15 phases complete" readout.
 - **Multiplayer aware** - each player tracks their own progress.
-- **Companion HTML guide.** The mod exports your progress to a JSON file; an
-  included single-file web guide (with deeper explanations, ratios, and new-player
-  traps) can import it - or sync live via a tiny optional local server.
+- **Companion web guide (on GitHub).** The mod exports progress to a JSON file that
+  a single-file HTML guide (deeper explanations, ratios, new-player traps) can import,
+  or sync live. Link and setup in the section below.
 
 ### How to use
 1. Enable the mod and start or load a save.
 2. Click the **Guide** button in the top toolbar to open the tracker.
 3. Play. Tasks tick themselves; click any checkbox to set it manually.
-4. (Optional) Click **Export Progress** to write a JSON file, then open the HTML
-   guide and **Import from Mod** to see the richer companion walkthrough.
+4. (Optional) Use the companion web guide below for the full walkthrough.
+
+### Companion web guide (optional)
+A single-file HTML guide with deeper explanations, ratios, and new-player traps
+lives on GitHub. The mod exports your progress to a JSON file that the page can
+import, or sync live. It is not bundled in this mod download.
+
+Get it and the one-time setup steps here:
+https://github.com/maxrenke/maxrenke_factorio_guide#readme
 
 ### Scope
 This is a **vanilla, base-game, rocket-launch** guide. It intentionally stops at
