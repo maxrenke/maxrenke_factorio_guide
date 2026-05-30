@@ -128,6 +128,17 @@ mklink /D "%AppData%\Roaming\Factorio\mods\vanilla-progress-guide_1.0.0" "C:\Use
 
 ## Publishing to the Factorio Mod Portal
 
+Quickest path - the helper script builds the zip and prints the exact click-by-click
+steps with links:
+
+```
+pwsh -File publish.ps1                 # first publish: build + checklist
+pwsh -File publish.ps1 -OpenPortal     # also open the portal in your browser
+pwsh -File publish.ps1 -Update         # after code changes: bump version + changelog, rebuild
+```
+
+The manual steps it automates are below.
+
 The mod is portal-ready. To build and upload:
 
 1. Build the zip:
