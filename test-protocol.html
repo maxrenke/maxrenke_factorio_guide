@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vanilla Progress Guide - Pre-Publish Test Protocol</title>
+<style>
+  :root {
+    --bg: #1b1f24; --card: #242a31; --card2: #2b323a; --line: #39424c;
+    --text: #e6e8eb; --muted: #9aa4af;
+    --orange: #e9a628; --green: #3fb950; --blue: #58a6ff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5; padding-bottom: 60px;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10; background: #15191d;
+    border-bottom: 1px solid var(--line); padding: 14px 20px;
+  }
+  header h1 { margin: 0 0 4px; font-size: 18px; }
+  header h1 span { color: var(--orange); }
+  .sub { color: var(--muted); font-size: 13px; }
+  .progress-wrap { max-width: 900px; margin: 10px auto 0; display: flex; align-items: center; gap: 12px; }
+  .bar { flex: 1; height: 10px; background: #11151a; border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0; background: var(--green); transition: width .2s; }
+  .pct { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 86px; text-align: right; font-size: 13px; }
+  .reset { background: var(--card2); color: var(--text); border: 1px solid var(--line);
+    border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 12px; }
+  .reset:hover { border-color: var(--orange); }
+  main { max-width: 900px; margin: 20px auto; padding: 0 16px; }
+  .gate {
+    background: rgba(233,166,40,.1); border: 1px solid var(--orange);
+    border-radius: 8px; padding: 12px 14px; font-size: 14px; margin-bottom: 18px;
+  }
+  .section { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    margin-bottom: 14px; overflow: hidden; }
+  .section.done { border-color: var(--green); }
+  .section-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+    background: var(--card2); }
+  .section-num { background: #11151a; color: var(--orange); font-weight: 700;
+    border-radius: 6px; padding: 2px 9px; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .section-title { font-weight: 600; }
+  .section-tag { margin-left: auto; font-size: 11px; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 10px; padding: 1px 8px; }
+  .section-tag.opt { color: var(--blue); border-color: var(--blue); }
+  .items { padding: 6px 6px 10px; }
+  .item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px;
+    border-radius: 8px; cursor: pointer; }
+  .item:hover { background: rgba(255,255,255,.03); }
+  .cb { flex: 0 0 20px; height: 20px; margin-top: 1px; border: 2px solid var(--line);
+    border-radius: 5px; display: grid; place-items: center; font-size: 13px; color: var(--green); }
+  .item.checked .cb { border-color: var(--green); }
+  .item.checked .do { color: var(--muted); text-decoration: line-through; }
+  .body { flex: 1; }
+  .do { font-size: 14px; }
+  .exp { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .exp b { color: var(--text); font-weight: 600; }
+  code { background: #11151a; border: 1px solid var(--line); border-radius: 4px;
+    padding: 1px 5px; font-size: 12px; }
+  .note { font-size: 12.5px; color: var(--muted); padding: 2px 16px 8px; }
+  footer { max-width: 900px; margin: 24px auto 0; padding: 0 16px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Vanilla Progress Guide - <span>Pre-Publish Test Protocol</span></h1>
+  <div class="sub">Run each check in-game. Any deviation from the expected result is a bug to fix before uploading.</div>
+  <div class="progress-wrap">
+    <div class="bar"><div class="bar-fill" id="fill"></div></div>
+    <div class="pct" id="pct">0 / 0</div>
+    <button class="reset" id="reset">Reset</button>
+  </div>
+</header>
+
+<main id="main">
+  <div class="gate">
+    <b>Minimum gate to publish:</b> sections 1-9 pass. Sections 10-13 cover sync and edge
+    features. Install first: copy <code>dist\vanilla-progress-guide_1.0.0.zip</code> into
+    <code>%AppData%\Roaming\Factorio\mods\</code>, enable it, and start a <b>new freeplay</b> save.
+  </div>
+  <!-- sections injected here -->
+</main>
+
+<footer>
+  Progress is saved in this browser (localStorage). Part of the
+  maxrenke_factorio_guide repo.
+</footer>
+
+<script>
+const STATE_KEY = 'vpg_test_protocol_v1';
+
+const SECTIONS = [
+  { n: '0', title: 'Install for testing', tag: 'gate', items: [
+    { do: 'Copy the built zip into the mods folder and enable it.',
+      exp: '<code>dist\\vanilla-progress-guide_1.0.0.zip</code> -> <code>%AppData%\\Roaming\\Factorio\\mods\\</code>, then enable in the Mods menu.' },
+    { do: 'Start a new freeplay save.',
+      exp: 'Expect: <b>no load error</b>, no "style does not exist" or Lua error dialog.' },
+  ]},
+  { n: '1', title: 'Panel smoke test', tag: 'gate', items: [
+    { do: 'Click the Guide button in the top toolbar.',
+      exp: 'Panel opens, titled "Vanilla Progress Guide - Rocket Launch", shows <b>Progress: 0 / 15 phases complete</b>, 15 collapsed phase rows, and an Export Progress button.' },
+    { do: 'Click a phase header, then the X button.',
+      exp: 'Header expands/collapses its task list; X closes the panel.' },
+  ]},
+  { n: '2', title: 'Manual checkbox + uncheck', tag: 'gate', items: [
+    { do: 'Expand Phase 1, tick a task by hand.', exp: 'Box checks, label greys out.' },
+    { do: 'Untick it (phase not yet complete).', exp: 'It clears normally.' },
+  ]},
+  { n: '3', title: 'Auto-trigger: built', tag: 'gate', items: [
+    { do: 'Place a Burner Mining Drill, then a Stone Furnace.',
+      exp: 'Each ticks its Phase 1 task automatically with a one-line flying text at your character. <b>No chat spam.</b>' },
+  ]},
+  { n: '4', title: 'Auto-trigger: produced (polled ~5s)', tag: 'gate', items: [
+    { do: 'Mine ~50 iron ore and ~20 coal; smelt ~50 iron plates.',
+      exp: 'Each "Mine/Smelt" task ticks within ~5s of crossing the count.' },
+    { do: 'Make 1 iron gear wheel (by hand or machine).',
+      exp: '"Craft iron gear wheels" ticks. (Now production-based, so either method counts.)' },
+    { do: 'Caveat check: do NOT rely on /c game.player.insert.',
+      exp: 'Inserting items via console does <b>not</b> register in production stats; you must actually produce/mine. (built and tech triggers are fine to test directly.)' },
+  ]},
+  { n: '5', title: 'Auto-trigger: tech', tag: 'gate', items: [
+    { do: 'Research Automation.', exp: '"Research Automation" ticks immediately on research finish.' },
+  ]},
+  { n: '6', title: 'Phase completion + bar + uncheck lock', tag: 'gate', items: [
+    { do: 'Finish every Phase 1 task (mix of auto + manual).',
+      exp: '<b>One</b> chat line "[Guide] Phase complete: Phase 1: First Steps!", green check on header, label -> "1 / 15".' },
+    { do: 'Try to untick a Phase 1 task now.',
+      exp: 'It re-checks itself - completed phases lock.' },
+  ]},
+  { n: '7', title: 'Anti-spam regression', tag: 'gate', items: [
+    { do: 'Watch chat during sections 3-6.',
+      exp: '<b>No</b> "[Guide] Progress exported..." line per task. That message appears <b>only</b> when you click Export Progress.' },
+  ]},
+  { n: '8', title: 'Catch-up on load (silent)', tag: 'gate', items: [
+    { do: 'Save, quit to menu, reload the save.',
+      exp: 'Panel re-shows the same progress; <b>no</b> flood of flying text / phase-complete / export spam on load.' },
+  ]},
+  { n: '9', title: 'Export + file write', tag: 'gate', items: [
+    { do: 'Click Export Progress.',
+      exp: 'One chat line confirming the write. File exists at <code>%AppData%\\Roaming\\Factorio\\script-output\\guide_progress.json</code>.' },
+    { do: 'Open the JSON.', exp: 'Valid JSON; your completed task ids = <b>true</b>.' },
+    { do: 'Check guide_heartbeat.json.', exp: 'Exists; its <code>tick</code> value grows ~every 5s while in-game.' },
+  ]},
+  { n: '10', title: 'HTML import sync', tag: 'opt', items: [
+    { do: 'Open index.html -> Import from Mod -> pick guide_progress.json.',
+      exp: '"N task(s) imported"; matching checklist items + completed phases tick. No console errors (F12).' },
+  ]},
+  { n: '11', title: 'Live server sync', tag: 'opt', items: [
+    { do: 'Run python server\\serve.py, open http://localhost:8777/, keep Factorio running.',
+      exp: 'Top badge goes green "Factorio connected - live".' },
+    { do: 'Complete a task in-game.',
+      exp: 'Within ~5s the web page reflects it without a manual import.' },
+  ]},
+  { n: '12', title: 'Rocket trigger (end-game)', tag: 'opt', items: [
+    { do: 'In a sandbox/editor save with a loaded Rocket Silo, launch.',
+      exp: 'Phase 15 "Launch the rocket!" ticks on launch.' },
+  ]},
+  { n: '13', title: 'Multiplayer', tag: 'opt', items: [
+    { do: 'Host with a second player.',
+      exp: 'Each panel tracks independently; tech ticks for everyone, built/crafted tick for the acting player.' },
+  ]},
+];
+
+let state = {};
+try { state = JSON.parse(localStorage.getItem(STATE_KEY)) || {}; } catch(e) { state = {}; }
+function save() { try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e) {} }
+
+const main = document.getElementById('main');
+SECTIONS.forEach(sec => {
+  const el = document.createElement('div');
+  el.className = 'section';
+  el.dataset.sec = sec.n;
+  const tag = sec.tag === 'opt'
+    ? '<span class="section-tag opt">optional</span>'
+    : '<span class="section-tag">gate</span>';
+  let html = `<div class="section-head"><span class="section-num">${sec.n}</span>`
+    + `<span class="section-title">${sec.title}</span>${tag}</div><div class="items">`;
+  sec.items.forEach((it, i) => {
+    const id = `s${sec.n}_i${i}`;
+    const checked = state[id] ? ' checked' : '';
+    html += `<div class="item${checked}" data-id="${id}">`
+      + `<div class="cb">${state[id] ? '&#10003;' : ''}</div>`
+      + `<div class="body"><div class="do">${it.do}</div><div class="exp">${it.exp}</div></div></div>`;
+  });
+  html += `</div>`;
+  el.innerHTML = html;
+  main.appendChild(el);
+});
+
+function update() {
+  const items = document.querySelectorAll('.item');
+  let total = 0, done = 0;
+  items.forEach(it => { total++; if (it.classList.contains('checked')) done++; });
+  document.getElementById('pct').textContent = `${done} / ${total}`;
+  document.getElementById('fill').style.width = total ? Math.round(done/total*100) + '%' : '0%';
+  document.querySelectorAll('.section').forEach(sec => {
+    const its = sec.querySelectorAll('.item');
+    const all = its.length > 0 && Array.from(its).every(i => i.classList.contains('checked'));
+    sec.classList.toggle('done', all);
+  });
+}
+
+document.querySelectorAll('.item').forEach(it => {
+  it.addEventListener('click', () => {
+    const id = it.dataset.id;
+    const now = !it.classList.contains('checked');
+    it.classList.toggle('checked', now);
+    it.querySelector('.cb').innerHTML = now ? '&#10003;' : '';
+    if (now) state[id] = true; else delete state[id];
+    save(); update();
+  });
+});
+
+document.getElementById('reset').addEventListener('click', () => {
+  state = {}; save();
+  document.querySelectorAll('.item').forEach(it => {
+    it.classList.remove('checked'); it.querySelector('.cb').innerHTML = '';
+  });
+  update();
+});
+
+update();
+</script>
+</body>
+</html>

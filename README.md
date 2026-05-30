@@ -130,6 +130,12 @@ the originals:
 | [Nilaus](https://www.youtube.com/channel/UCD80bzqJh1N7lOqn7n0vKTg) | HOW TO PLAY FACTORIO \| 7000+ Hours of experience explained in 30 min | [video](https://www.youtube.com/watch?v=chavhzKpZwM) |
 | [Trupen](https://www.youtube.com/channel/UC6kQdIS4TJwUURNu0NPoVgw) | Your First Hour in Factorio | [video](https://www.youtube.com/watch?v=MtypKdgWWtk) |
 
+## Testing before publish
+
+Open `test-protocol.html` in a browser for an interactive, checkbox-tracked
+pre-publish test protocol (install, auto-triggers, anti-spam, sync, multiplayer).
+Sections 1-9 are the minimum gate; 10-13 cover sync/edge features.
+
 ## Development
 
 ```bash
