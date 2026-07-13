@@ -2605,6 +2605,9 @@ function importFromMod(jsonData, opts) {
     }
 
     let imported = 0;
+    let unmapped = 0;
+    // Mod tasks with no representative HTML item; not counted as unmapped.
+    const OMITTED = new Set(['p4_steel_research', 'p4_smelt_steel', 'p13_kovarex']);
 
     for (const [phaseId, phaseData] of Object.entries(data.phases)) {
       // Map mod phase_id (e.g. "phase_1") to HTML phase number (e.g. "1")
@@ -2619,7 +2622,10 @@ function importFromMod(jsonData, opts) {
         for (const [taskId, done] of Object.entries(phaseData.tasks)) {
           if (!done) continue;
           const idx = taskMap[taskId];
-          if (idx === undefined || idx < 0 || idx >= checklistItems.length) continue;
+          if (idx === undefined || idx < 0 || idx >= checklistItems.length) {
+            if (!OMITTED.has(taskId)) unmapped++;
+            continue;
+          }
           if (checkItem(checklistItems[idx], phaseNum, idx)) imported++;
         }
       }
@@ -2637,7 +2643,9 @@ function importFromMod(jsonData, opts) {
     if (resultEl) {
       resultEl.className = '';
       resultEl.textContent = imported + ' task(s) imported successfully' +
-        (data.player ? ' (player: ' + data.player + ')' : '') + '.';
+        (data.player ? ' (player: ' + data.player + ')' : '') + '.' +
+        (unmapped ? ' Warning: ' + unmapped + ' completed mod task(s) had no ' +
+          'matching guide item - the task map may be out of date.' : '');
     }
     return imported;
   } catch (err) {

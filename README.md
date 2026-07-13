@@ -2,6 +2,9 @@
 
 Interactive HTML guide + companion Factorio mod for your first vanilla playthrough (Space Age patch, no DLC).
 
+Also in this repo: [CHEATSHEET.md](CHEATSHEET.md) - keybind and mod-settings quick
+reference for the full QoL mod loadout used alongside this guide.
+
 ## HTML Guide
 
 A single-file interactive walkthrough that pairs with the mod. It is not bundled in

@@ -169,8 +169,9 @@ as a separate scoped effort.**
    - HTML: updateProgress() derives totalPhases and completed count from the DOM
      (.phase-card[id^="phase-"] / .completed) instead of the literal 15 and stale
      state.phases keys.
-5. [P2] Add import integrity warning on count mismatch (defense in depth). NOT done
-   (the id-map fix makes silent mis-checking impossible, lowering urgency).
+5. [P2][DONE] Import integrity warning: importFromMod now counts completed mod tasks
+   that have no MOD_TASK_MAP entry (excluding the intentionally omitted ids) and
+   appends a "task map may be out of date" warning to the import result.
 6. [P2] Multi-surface production stats in control.lua (only if Space Age expansion happens).
 7. [Decision][RESOLVED] Vanilla-polish chosen. The HTML is explicitly vanilla-scoped
    (title/subtitle "vanilla only. No DLC content", tags, Phase 15 frames DLC as an
