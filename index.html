@@ -1011,7 +1011,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Loot your crashed ship with <kbd>Ctrl + LClick</kbd> - grab all iron plates and ammo from inside. Use Alt to see what's in there.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p1_mine_coal">
           <div class="task-checkbox"></div>
           <div class="task-text">Find coal rocks on the map (<kbd>M</kbd>). These look like darker rocks and yield 20-40 coal + stone each. Mine every coal rock you find early on.</div>
         </div>
@@ -1019,7 +1019,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Use <kbd>Alt+D</kbd> (construction planner) to scan an area and identify rock types before mining - it shows what resources each rock contains.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p1_build_drill">
           <div class="task-checkbox"></div>
           <div class="task-text">Place your starting Burner Mining Drill on the iron ore patch. Place a Stone Furnace adjacent with its output facing the furnace input.</div>
         </div>
@@ -1027,11 +1027,11 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Fuel the drill with wood first (press <kbd>Z</kbd> with wood selected to quick-insert). Gather coal as fast as possible to replace wood fuel.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p1_build_furnace">
           <div class="task-checkbox"></div>
           <div class="task-text">Craft enough Stone Furnaces from mined stone: aim for 8-10 iron furnaces and 4-6 copper furnaces. Use <kbd>Shift + LClick</kbd> to craft the max possible.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p1_mine_iron p1_smelt_iron">
           <div class="task-checkbox"></div>
           <div class="task-text">Place Burner Mining Drills on the iron patch feeding into your row of stone furnaces. Set up at least 8 furnaces smelting iron.</div>
         </div>
@@ -1043,7 +1043,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Set up 4-6 copper furnaces with drills feeding them. Copper is needed for wire, circuits, and science packs.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p1_craft_gear">
           <div class="task-checkbox"></div>
           <div class="task-text">While waiting for materials, hand-craft intermediate items: Iron Gear Wheels, Copper Cables - these will be used constantly. Use <kbd>Shift + LClick</kbd> to queue max crafting.</div>
         </div>
@@ -1104,7 +1104,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Craft: 1x Offshore Pump, 1x Boiler, 2x Steam Engine, several Pipes, and Small Electric Poles.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p2_build_boiler p2_build_engine">
           <div class="task-checkbox"></div>
           <div class="task-text">Place the Offshore Pump on the edge of a water body. Connect with pipes to the Boiler, then pipes from boiler to Steam Engines. Rotate buildings with <kbd>R</kbd> to align pipe connections.</div>
         </div>
@@ -1129,11 +1129,11 @@
 
       <div class="section-title">Lab &amp; Research</div>
       <div class="checklist" id="cl-2b">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p2_build_lab">
           <div class="task-checkbox"></div>
           <div class="task-text">Crafting 10 Copper Plates unlocks the Lab in your research tree (a trigger-based unlock in v2.x). Craft a Lab and place it near your base with power connected.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p2_red_science">
           <div class="task-checkbox"></div>
           <div class="task-text">Hand-craft 10 Red Science Packs (Automation Science Packs). Recipe: 1 Copper Plate + 1 Iron Gear Wheel each.</div>
         </div>
@@ -1141,7 +1141,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Insert the 10 red science packs into the lab with <kbd>Ctrl + LClick</kbd> on an empty inventory slot - this auto-loads all matching items.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p2_research_auto">
           <div class="task-checkbox"></div>
           <div class="task-text">Queue the <strong>Automation</strong> technology in the research tree (<kbd>T</kbd>). Also queue <strong>Logistics</strong> (underground belts + splitters) - these are essential.</div>
         </div>
@@ -1198,7 +1198,7 @@
 
       <div class="section-title">Temporary Automation Setup</div>
       <div class="checklist" id="cl-3">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p3_build_assembler">
           <div class="task-checkbox"></div>
           <div class="task-text">Craft several Assembling Machine 1s (from Automation research). These can craft most items automatically.</div>
         </div>
@@ -1210,11 +1210,11 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Set up 1-2 Assembling Machines making <strong>Copper Cables</strong>. Output cables into a chest, then have inserters pull cables into the circuit assembler.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p3_automate_circuits">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up 2 Assembling Machines making <strong>Green Circuits (Electronic Circuits)</strong>. Recipe: 3 Copper Cable + 1 Iron Plate.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p3_red_flowing">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Red Science (Automation Science Pack)</strong> production: 1 Copper Plate + 1 Iron Gear Wheel. Use 2 assemblers for this.</div>
         </div>
@@ -1222,7 +1222,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Run an output Inserter from the red science assembler into a chest, and another Inserter from that chest into the Lab. Or run a belt directly to the lab.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p3_green_flowing">
           <div class="task-checkbox"></div>
           <div class="task-text">Once Logistics is researched, set up <strong>Green Science (Logistic Science Pack)</strong>: 1 Transport Belt + 1 Inserter. Needs its own assembly line.</div>
         </div>
@@ -1230,7 +1230,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Add a second (and third) Lab and connect them to both science pack feeds. More labs = faster research.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p3_research_logistics">
           <div class="task-checkbox"></div>
           <div class="task-text">Research queue in order: <strong>Logistics</strong> (underground belts), <strong>Fast Inserter</strong>, <strong>Steel Processing</strong>, <strong>Military</strong> (for turrets). Keep labs fed constantly.</div>
         </div>
@@ -1301,15 +1301,15 @@
 
       <div class="section-title">Proper Smelting Columns</div>
       <div class="checklist" id="cl-4">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p4_big_iron">
           <div class="task-checkbox"></div>
           <div class="task-text">Build an <strong>Iron Smelting Column</strong>: a straight line of 16-20 Stone Furnaces. Belt ore in on one side, belt plates out the other side. Inserters load/unload each furnace.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p4_big_copper">
           <div class="task-checkbox"></div>
           <div class="task-text">Build a <strong>Copper Smelting Column</strong>: 8-10 Stone Furnaces in the same arrangement. Copper is less needed early but scales up significantly mid-game.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p4_stone_bricks">
           <div class="task-checkbox"></div>
           <div class="task-text">Build a <strong>Stone Smelting Column</strong>: 4-6 furnaces making Stone Bricks. Stone bricks are used for concrete (later) and are also a raw bus material.</div>
         </div>
@@ -1403,15 +1403,15 @@
 
       <div class="section-title">Defense Setup</div>
       <div class="checklist" id="cl-5">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p5_research_mil">
           <div class="task-checkbox"></div>
           <div class="task-text">Research <strong>Military</strong> tech (requires red + green science). This unlocks Gun Turrets, Walls, Grenades upgrades.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p5_build_wall">
           <div class="task-checkbox"></div>
           <div class="task-text">Build stone <strong>Walls</strong> around the perimeter of your base. Walls stop biters from walking through - they bite at walls instead. Build walls at least 2-3 tiles thick in high-traffic areas.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p5_build_turret">
           <div class="task-checkbox"></div>
           <div class="task-text">Place <strong>Gun Turrets</strong> behind the walls every 5-7 tiles. Turrets fire automatically at biters. Each turret needs Firearm Magazines (ammo) inserted manually or via inserter from a chest.</div>
         </div>
@@ -1427,7 +1427,7 @@
 
       <div class="section-title">Military Science Packs</div>
       <div class="checklist" id="cl-5b">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p5_military_flow">
           <div class="task-checkbox"></div>
           <div class="task-text">Military Science Pack recipe: 1 Firearm Magazine + 1 Grenade + 2 Wall. Set up assemblers pulling from the bus for iron and stone.</div>
         </div>
@@ -1488,11 +1488,11 @@
 
       <div class="section-title">Oil Setup</div>
       <div class="checklist" id="cl-6">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p6_oil_research">
           <div class="task-checkbox"></div>
           <div class="task-text">Research <strong>Oil Processing</strong> (requires blue science beakers to unlock advanced processing later, but Basic Oil Processing is available from red+green+military science).</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p6_build_refinery">
           <div class="task-checkbox"></div>
           <div class="task-text">Find an <strong>Oil Patch</strong> on the map. Build an Oil Refinery on or adjacent to oil wells (connect oil wells to refinery with pipes).</div>
         </div>
@@ -1504,11 +1504,11 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Add <strong>Pumps</strong> in pipe networks longer than ~20 pipes. In v2.x, long pipes without pumps lose pressure and stop flowing. When a pipe network stops working, add a pump.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p6_build_chem_plant p6_produce_plastic">
           <div class="task-checkbox"></div>
           <div class="task-text">Build a <strong>Chemical Plant</strong> for Plastic production. Recipe: 1 Coal + 2 Petroleum Gas = 2 Plastic Bars. Coal from the bus, gas from a pipe.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p6_produce_sulfur">
           <div class="task-checkbox"></div>
           <div class="task-text">Build a Chemical Plant for <strong>Sulfur</strong>. Recipe: 2 Water + 3 Petroleum Gas = 2 Sulfur. Sulfur is needed for blue science and sulfuric acid.</div>
         </div>
@@ -1520,7 +1520,7 @@
 
       <div class="section-title">Red Circuits &amp; Blue Science</div>
       <div class="checklist" id="cl-6b">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p6_produce_red_circ">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Advanced Circuit (Red Circuit)</strong> production. Recipe: 4 Copper Cable + 2 Green Circuit + 2 Plastic Bar. These are slow to make - build several assemblers.</div>
         </div>
@@ -1532,7 +1532,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Engine Unit</strong> production for blue science. Recipe: 1 Steel Pipe + 8 Iron Gear Wheel + 1 Steel Plate (x1 crafted in assembler). Also needs Chemical Plant for some variants - check the recipe.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p6_blue_flowing">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Blue Science (Chemical Science Pack)</strong>. Recipe: 3 Advanced Circuit + 2 Engine Unit + 1 Sulfur. Hook assemblers to the bus.</div>
         </div>
@@ -1602,7 +1602,7 @@
 
       <div class="section-title">Robot Rush Build</div>
       <div class="checklist" id="cl-7">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p7_research_robotics">
           <div class="task-checkbox"></div>
           <div class="task-text">Research path: <strong>Robotics</strong> (blue science) -> <strong>Construction Robotics</strong> -> <strong>Logistic Robotics</strong>. Make this your top research priority after blue science flows.</div>
         </div>
@@ -1610,11 +1610,11 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Build <strong>Flying Robot Frame</strong> production. Recipe requires Electric Engine Units which need Lubricant (from Light Oil in Chemical Plant) and Electric Engine parts.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p7_produce_bots">
           <div class="task-checkbox"></div>
           <div class="task-text">Produce <strong>Construction Bots</strong>: Flying Robot Frame + Green Circuit + Iron Gear Wheel. Build at least 50, ideally 100+ before expanding heavily.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p7_build_roboport">
           <div class="task-checkbox"></div>
           <div class="task-text">Build <strong>Roboports</strong> (4x4 buildings). Each roboport covers a charging and logistics area. Place them so their coverage (grey circle) overlaps - no dead zones.</div>
         </div>
@@ -1626,7 +1626,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Research <strong>Personal Roboport Equipment</strong>. Build it and insert into your armor grid. Now you carry a personal roboport - your own bots fly out from your character to build things.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p7_logistic_bots">
           <div class="task-checkbox"></div>
           <div class="task-text">Build <strong>Logistic Bots</strong> and place them in roboports. Logistic bots move items between provider chests and requester chests - the foundation of the logistic network.</div>
         </div>
@@ -1691,15 +1691,15 @@
 
       <div class="section-title">Solar Array Setup</div>
       <div class="checklist" id="cl-8">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p8_research_solar">
           <div class="task-checkbox"></div>
           <div class="task-text">Research <strong>Solar Energy</strong> (blue science) and <strong>Electric Energy Accumulator</strong>.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p8_produce_batt">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Battery</strong> production: Chemical Plant, Sulfuric Acid + Iron Plate + Copper Plate. Batteries are needed for Accumulators.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p8_produce_solar p8_produce_accum">
           <div class="task-checkbox"></div>
           <div class="task-text">Produce Solar Panels and Accumulators in bulk - you'll need hundreds to thousands eventually. Robots will place them.</div>
         </div>
@@ -1771,7 +1771,7 @@
 
       <div class="why-block">
         <span class="why-icon">&#128161;</span>
-        <div class="why-text">Yellow science unlocks Personal Roboport, Power Armor Mk2, Portable Fusion Reactor, and the full logistics system. These make you vastly more effective as a builder. Despite appearing "after" purple in the UI, do yellow first - the quality-of-life upgrades are worth far more at this stage.</div>
+        <div class="why-text">Yellow science unlocks Personal Roboport Mk2, Power Armor Mk2, Battery Mk2, and the full logistics system. These make you vastly more effective as a builder. Despite appearing "after" purple in the UI, do yellow first - the quality-of-life upgrades are worth far more at this stage.</div>
       </div>
 
       <div class="goal-banner">
@@ -1781,7 +1781,7 @@
 
       <div class="section-title">Base Upgrades First</div>
       <div class="checklist" id="cl-9">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p9_upgrade_belts">
           <div class="task-checkbox"></div>
           <div class="task-text">Use robots to upgrade all yellow belts to <strong>Red Belts</strong> (Fast Transport Belts). Build up a stockpile of red belts first, then stamp the upgrade - robots do all the work.</div>
         </div>
@@ -1797,11 +1797,11 @@
 
       <div class="section-title">Yellow Science Ingredients</div>
       <div class="checklist" id="cl-9b">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p9_blue_circuits">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Processing Unit (Blue Circuit)</strong> production. Recipe: 20 Green Circuit + 2 Advanced Circuit + 1 Sulfuric Acid. Needs Assembling Machine 2 (handles fluids). Very green-circuit-intensive - expect to build many parallel assemblers.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p9_produce_lds">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Low Density Structure</strong> production. Recipe: 20 Copper Plate + 5 Steel + 2 Plastic Bar. Copper-heavy - expand your copper smelting column.</div>
         </div>
@@ -1809,7 +1809,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Flying Robot Frame</strong> production (needed for yellow science pack AND for making more bots). Recipe: 1 Steel + 2 Battery + 3 Electronic Circuit + 1 Electric Engine Unit.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p9_yellow_flowing">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Yellow Science (Production Science Pack)</strong> production. Recipe: 1 Electric Engine Unit + 1 Low Density Structure + 1 Processing Unit + 1 Rail.</div>
         </div>
@@ -1819,7 +1819,7 @@
         </div>
         <div class="checklist-item" onclick="toggleTask(this)">
           <div class="task-checkbox"></div>
-          <div class="task-text">Research priority with yellow science: <strong>Power Armor Mk2</strong>, <strong>Personal Roboport Mk2</strong>, <strong>Portable Fusion Reactor</strong>, <strong>Logistics System</strong>.</div>
+          <div class="task-text">Research priority with yellow science: <strong>Power Armor Mk2</strong>, <strong>Personal Roboport Mk2</strong>, <strong>Battery Mk2</strong>, <strong>Energy Shield Mk2</strong>, <strong>Logistics System</strong>.</div>
         </div>
       </div>
 
@@ -1861,28 +1861,28 @@
 
       <div class="why-block">
         <span class="why-icon">&#128161;</span>
-        <div class="why-text">Power Armor with personal roboport and fusion reactor transforms your character into a mobile construction machine. Combined with the logistic network (requester/provider chests), you can deploy entire factories from your inventory with bots doing all the physical placement.</div>
+        <div class="why-text">Power Armor with personal roboports transforms your character into a mobile construction machine. Combined with the logistic network (requester/provider chests), you can deploy entire factories from your inventory with bots doing all the physical placement.</div>
       </div>
 
       <div class="goal-banner">
         <span>&#127937;</span>
-        <div><strong>Phase Goal:</strong> Power Armor Mk2 equipped with fusion reactor + personal roboport + shields, logistic network active.</div>
+        <div><strong>Phase Goal:</strong> Power Armor Mk2 equipped with portable solar + Battery Mk2 + personal roboports + shields, logistic network active.</div>
       </div>
 
       <div class="checklist" id="cl-10">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p10_power_armor">
           <div class="task-checkbox"></div>
           <div class="task-text">Craft <strong>Power Armor Mk2</strong>. This has a large equipment grid for modules. Recipe: expensive - needs processing units and low density structures.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p10_battery_mk2">
           <div class="task-checkbox"></div>
-          <div class="task-text">Install <strong>Portable Fusion Reactor(s)</strong> in armor grid. These generate power for all other equipment. No fuel needed - infinite energy.</div>
+          <div class="task-text">Power the armor grid with <strong>Portable Solar Panels</strong> plus <strong>Battery Mk2</strong> equipment. Solar charges the batteries by day, the batteries carry you through the night and cover burst draw from roboports and shields.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p10_personal_rob">
           <div class="task-checkbox"></div>
           <div class="task-text">Install <strong>Personal Roboport Mk2</strong> equipment. Multiple roboports = larger build radius and more simultaneous bot slots.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p10_shield_mk2">
           <div class="task-checkbox"></div>
           <div class="task-text">Install <strong>Energy Shield Mk2</strong> equipment for combat protection when clearing biter nests.</div>
         </div>
@@ -1890,7 +1890,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Install <strong>Exoskeleton</strong> equipment for faster movement speed.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p10_log_system">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up the <strong>Logistic Network</strong>: place Provider Chests (items go in) and Requester Chests (items come out, you set what you want). Logistic bots handle the transport automatically within roboport coverage.</div>
         </div>
@@ -1908,7 +1908,15 @@
         <span class="callout-icon">&#128161;</span>
         <div>
           <span class="callout-label">Pro Tip - Equipment Balance</span>
-          Fill remaining armor slots with exoskeletons for movement speed - it makes a huge quality-of-life difference. A good Mk2 loadout: 2 fusion reactors, 2 personal roboports Mk2, 2 energy shields Mk2, exoskeletons filling the rest.
+          Fill remaining armor slots with exoskeletons for movement speed - it makes a huge quality-of-life difference. A workable Mk2 loadout: 2 personal roboports Mk2, 2 energy shields Mk2, 4-6 portable solar panels, 2-3 Battery Mk2, exoskeletons filling the rest.
+        </div>
+      </div>
+
+      <div class="callout callout-trap">
+        <span class="callout-icon">&#9888;</span>
+        <div>
+          <span class="callout-label">No Portable Fusion Reactor in the base game</span>
+          The Portable Fusion Reactor is <strong>Space Age DLC content</strong> - it does not exist in vanilla 2.0. Your armor grid runs on portable solar and batteries only, which means power is genuinely tight: roboports, shields and exoskeletons all draw at once. Budget grid space for power the way you would budget a real factory, and expect to stand still occasionally to recharge.
         </div>
       </div>
 
@@ -1943,7 +1951,7 @@
 
       <div class="section-title">Uranium Setup</div>
       <div class="checklist" id="cl-11">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p11_research_nuke p11_research_uranium">
           <div class="task-checkbox"></div>
           <div class="task-text">Research <strong>Uranium Mining</strong> and <strong>Nuclear Power</strong> (yellow + blue science). Also research <strong>Atomic Bomb</strong> branch leads to Kovarex enrichment later.</div>
         </div>
@@ -1959,11 +1967,11 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Use a train to bring uranium ore back to base (or run pipes for sulfuric acid out and belt uranium back). A single 1-4 train (1 tank car for sulfuric acid, 3-4 cargo cars for uranium) works perfectly.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p11_build_centrifuge">
           <div class="task-checkbox"></div>
           <div class="task-text">Build <strong>Uranium Processing</strong> in Centrifuges. This produces U-235 (~0.7%) and U-238 (~99.3%). U-235 is nuclear fuel. U-238 is mostly waste (save 40 U-235 for Kovarex later).</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p11_produce_fuel">
           <div class="task-checkbox"></div>
           <div class="task-text">Build <strong>Nuclear Fuel Cell</strong> production: 10 U-235 + 1 Iron Plate = 10 fuel cells. A single centrifuge output is more than enough for 4-8 reactors.</div>
         </div>
@@ -1975,7 +1983,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Place reactors <strong>close to a large water source</strong>. This is more important than being near uranium. Heat exchangers need enormous amounts of water.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p11_build_reactor">
           <div class="task-checkbox"></div>
           <div class="task-text">Build a <strong>4-reactor minimum</strong> setup (2x2 arrangement). Reactors touching each other get a neighbor bonus - each extra neighbor doubles output. A 4-reactor array outputs 480 MW.</div>
         </div>
@@ -2050,7 +2058,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Scale up <strong>Steel</strong> production - purple science needs a lot. Upgrade to steel furnaces (from Phase 9) and add more smelting columns if needed.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p12_purple_flowing">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Purple Science (Utility Science Pack)</strong> production. Recipe: 3 Advanced Circuit + 1 Flying Robot Frame + 2 Low Density Structure.</div>
         </div>
@@ -2058,7 +2066,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Feed purple science into labs alongside all other science types. Research priorities: <strong>Productivity Module 3</strong>, <strong>Speed Module 3</strong>, <strong>Beacon</strong>, <strong>Tier 3 Assembling Machine</strong>.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p13_kovarex">
           <div class="task-checkbox"></div>
           <div class="task-text">Research <strong>Kovarex Enrichment</strong> if you want more U-235 (optional but nice for late game).</div>
         </div>
@@ -2106,15 +2114,15 @@
       </div>
 
       <div class="checklist" id="cl-13">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p13_prod3 p12_research_prod3">
           <div class="task-checkbox"></div>
           <div class="task-text">Build <strong>Productivity Module 3</strong> production. Very expensive (blue circuits + red circuits + green circuits). Stockpile 50-100 before deploying.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p13_speed3">
           <div class="task-checkbox"></div>
           <div class="task-text">Build <strong>Speed Module 3</strong> production. Equally expensive. You'll need many for beacons.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p13_build_beacon p12_research_beacons">
           <div class="task-checkbox"></div>
           <div class="task-text">Build <strong>Beacons</strong>. Each beacon transmits its module effects to all machines within 3 tiles. Speed Module 3 beacons surrounding an assembler give massive speed boosts.</div>
         </div>
@@ -2178,17 +2186,17 @@
 
       <div class="why-block">
         <span class="why-icon">&#128161;</span>
-        <div class="why-text">The rocket requires four main components produced in quantity. Each one is expensive, and the silo is slow to fill. This phase is about scaling every upstream production line enough to feed the silo at a meaningful rate while optionally building a satellite for the complete ending.</div>
+        <div class="why-text">A rocket is 100 Rocket Parts, and each part costs 10 Processing Units + 10 Low Density Structures + 10 Rocket Fuel. Three components, produced in quantity. Each one is expensive, and the silo is slow to fill. This phase is about scaling every upstream production line enough to feed the silo at a meaningful rate while optionally building a satellite for the complete ending.</div>
       </div>
 
       <div class="goal-banner">
         <span>&#127937;</span>
-        <div><strong>Phase Goal:</strong> Rocket Silo placed with Prod 3 modules, all 4 rocket parts flowing in, satellite crafted and ready.</div>
+        <div><strong>Phase Goal:</strong> Rocket Silo placed with Prod 3 modules, all 3 rocket components flowing in, satellite crafted and ready.</div>
       </div>
 
       <div class="section-title">Rocket Silo</div>
       <div class="checklist" id="cl-14">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p14_research_silo p14_build_silo">
           <div class="task-checkbox"></div>
           <div class="task-text">Research <strong>Rocket Silo</strong>. Craft it (very expensive - needs blue circuits, steel, low density structures). Place it with plenty of space around it for inserters and belts.</div>
         </div>
@@ -2198,30 +2206,29 @@
         </div>
       </div>
 
-      <div class="section-title">The Four Rocket Parts</div>
+      <div class="section-title">The Three Rocket Components</div>
       <div class="two-col">
         <div class="recipe-block">
           <div class="recipe-title">Rocket Fuel</div>
           <ul>
-            <li>10 Solid Fuel each</li>
+            <li>10 Solid Fuel + 10 Light Oil</li>
             <li>Solid Fuel: 10 Light Oil or 20 Petroleum Gas</li>
             <li>Scale up oil production heavily</li>
-            <li>Needs: lots of light oil -> solid fuel -> rocket fuel</li>
+            <li>Needs: lots of light oil -&gt; solid fuel -&gt; rocket fuel</li>
           </ul>
         </div>
         <div class="recipe-block">
-          <div class="recipe-title">Rocket Control Unit</div>
+          <div class="recipe-title">Processing Unit (blue circuit)</div>
           <ul>
-            <li>1 Processing Unit (blue circuit)</li>
-            <li>1 Speed Module 1</li>
-            <li>Massive strain on blue circuit production</li>
+            <li>20 Green Circuits + 2 Red Circuits + 5 Sulfuric Acid</li>
+            <li>Massive strain on green circuit production</li>
             <li>Add many parallel assemblers</li>
           </ul>
         </div>
         <div class="recipe-block">
           <div class="recipe-title">Low Density Structure</div>
           <ul>
-            <li>20 Copper + 5 Steel + 2 Plastic</li>
+            <li>20 Copper + 2 Steel + 5 Plastic</li>
             <li>Double existing production (needed for both yellow science and rockets)</li>
             <li>Copper-intensive - expand copper smelting</li>
           </ul>
@@ -2232,23 +2239,24 @@
             <li>100 Low Density Structure</li>
             <li>100 Solar Panel</li>
             <li>100 Accumulator</li>
+            <li>100 Processing Unit</li>
+            <li>50 Rocket Fuel</li>
             <li>5 Radar</li>
-            <li>50 Processing Unit</li>
             <li>Craft 1 manually or in assembler</li>
           </ul>
         </div>
       </div>
 
       <div class="checklist" id="cl-14b">
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p14_rocket_fuel">
           <div class="task-checkbox"></div>
           <div class="task-text">Set up <strong>Rocket Fuel</strong> production: Light Oil -> Solid Fuel (Chemical Plant) -> Rocket Fuel (Chemical Plant). Scale oil refinery output with beacons and modules first.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p14_proc_units">
           <div class="task-checkbox"></div>
-          <div class="task-text">Set up <strong>Rocket Control Unit</strong> production. Add dedicated assemblers - this bottlenecks on blue circuits so have many parallel blue circuit assemblers.</div>
+          <div class="task-text">Scale up <strong>Processing Unit</strong> production. Add dedicated assemblers - this is the hardest of the three to sustain, so run many parallel blue circuit assemblers fed by their own green and red circuit lines.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p14_lds_rocket">
           <div class="task-checkbox"></div>
           <div class="task-text">Double your <strong>Low Density Structure</strong> production - rockets need as much as yellow science does.</div>
         </div>
@@ -2258,15 +2266,15 @@
         </div>
         <div class="checklist-item" onclick="toggleTask(this)">
           <div class="task-checkbox"></div>
-          <div class="task-text">Belt or bot-deliver all four rocket components into the Rocket Silo via inserters.</div>
+          <div class="task-text">Belt or bot-deliver all three rocket components into the Rocket Silo via inserters.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p14_satellite">
           <div class="task-checkbox"></div>
           <div class="task-text">Craft a <strong>Satellite</strong>. You can do this manually if you have the materials - it only needs one. Insert it into the rocket silo via inserter or manually.</div>
         </div>
         <div class="checklist-item" onclick="toggleTask(this)">
           <div class="task-checkbox"></div>
-          <div class="task-text">Watch the silo fill up. With 4x Productivity 3 modules, you need ~715 of each rocket part instead of 1000. Track progress in the silo UI.</div>
+          <div class="task-text">Watch the silo fill up. A rocket is 100 parts, so 1000 of each component - with 4x Productivity 3 modules that drops to ~715 of each. Track progress in the silo UI.</div>
         </div>
       </div>
 
@@ -2274,7 +2282,7 @@
         <span class="callout-icon">&#9888;</span>
         <div>
           <span class="callout-label">New Player Trap - Underestimating Scale</span>
-          Every production line you've built so far will feel inadequate when feeding a rocket silo. The silo needs sustained production of all four components simultaneously. Check which component fills slowest and expand that production first. The bottleneck shifts as you fix each one.
+          Every production line you've built so far will feel inadequate when feeding a rocket silo. The silo needs sustained production of all three components simultaneously. Check which component fills slowest and expand that production first. The bottleneck shifts as you fix each one.
         </div>
       </div>
 
@@ -2328,7 +2336,7 @@
           <div class="task-checkbox"></div>
           <div class="task-text">Click <strong>Launch Rocket</strong> in the silo GUI. Stand back and watch the countdown and launch sequence.</div>
         </div>
-        <div class="checklist-item" onclick="toggleTask(this)">
+        <div class="checklist-item" onclick="toggleTask(this)" data-task-id="p15_launch_rocket">
           <div class="task-checkbox"></div>
           <div class="task-text">The rocket launches. Victory screen appears. You've completed Factorio vanilla.</div>
         </div>
@@ -2559,31 +2567,24 @@ function closeImportModalOnOverlay(e) {
   if (e.target === document.getElementById('import-modal-overlay')) closeImportModal();
 }
 
-// Maps each mod task id (from mod/phases.lua) to the 0-based index of the
-// corresponding HTML .checklist-item within its phase card (querySelectorAll
-// flattens all checklist blocks in the card, in DOM order). The mod tracks
-// coarse milestones; the HTML has finer steps, so this is an explicit
-// id -> index map rather than positional matching. Multiple mod task ids may
-// point to the same HTML item. Mod tasks with no representative HTML item
-// (p4_steel_research, p4_smelt_steel, p13_kovarex) are intentionally omitted
-// and simply won't auto-check on import.
-const MOD_TASK_MAP = {
-  phase_1:  { p1_mine_coal: 2, p1_build_drill: 4, p1_mine_iron: 7, p1_build_furnace: 6, p1_smelt_iron: 7, p1_craft_gear: 10 },
-  phase_2:  { p2_build_boiler: 1, p2_build_engine: 1, p2_build_lab: 4, p2_red_science: 5, p2_research_auto: 7 },
-  phase_3:  { p3_build_assembler: 0, p3_automate_circuits: 3, p3_red_flowing: 4, p3_green_flowing: 6, p3_research_logistics: 8 },
-  phase_4:  { p4_big_iron: 0, p4_big_copper: 1, p4_stone_bricks: 2 },
-  phase_5:  { p5_research_mil: 0, p5_build_wall: 1, p5_build_turret: 2, p5_military_flow: 5 },
-  phase_6:  { p6_oil_research: 0, p6_build_refinery: 1, p6_build_chem_plant: 4, p6_produce_plastic: 4, p6_produce_sulfur: 5, p6_produce_red_circ: 7, p6_blue_flowing: 10 },
-  phase_7:  { p7_research_robotics: 0, p7_produce_bots: 2, p7_build_roboport: 3, p7_logistic_bots: 6 },
-  phase_8:  { p8_research_solar: 0, p8_produce_batt: 1, p8_produce_solar: 2, p8_produce_accum: 3 },
-  phase_9:  { p9_upgrade_belts: 0, p9_blue_circuits: 3, p9_produce_lds: 4, p9_yellow_flowing: 6 },
-  phase_10: { p10_power_armor: 0, p10_fusion: 1, p10_personal_rob: 2, p10_log_system: 5 },
-  phase_11: { p11_research_nuke: 0, p11_research_uranium: 0, p11_build_centrifuge: 4, p11_produce_fuel: 5, p11_build_reactor: 7 },
-  phase_12: { p12_purple_flowing: 2, p12_research_prod3: 3, p12_research_beacons: 3 },
-  phase_13: { p13_prod3: 0, p13_speed3: 1, p13_build_beacon: 2 },
-  phase_14: { p14_research_silo: 0, p14_build_silo: 0, p14_rocket_fuel: 2, p14_rcu: 3, p14_lds_rocket: 4, p14_satellite: 7 },
-  phase_15: { p15_launch_rocket: 3 }
-};
+// Mod task ids (from mod/phases.lua) are carried on the HTML checklist items
+// themselves as data-task-id, so the two sides are matched by name, not by
+// position. One item may carry several ids (space separated) where the mod
+// tracks a coarser milestone than the guide does, and an id may live on an item
+// in a neighbouring phase card where the guide orders the work differently.
+// Mod tasks with no representative HTML item (p4_steel_research, p4_smelt_steel)
+// are intentionally untagged and simply won't auto-check on import.
+const OMITTED_MOD_TASKS = new Set(['p4_steel_research', 'p4_smelt_steel']);
+
+// The localStorage key for a task is derived from the card it lives in and its
+// position in that card, so resolve both from the element rather than assuming
+// the mod's phase id matches the guide's.
+function locateItem(item) {
+  const card = item.closest('.phase-card');
+  if (!card || !card.id) return null;
+  const items = Array.from(card.querySelectorAll('.checklist-item'));
+  return { phaseNum: card.id.replace('phase-', ''), idx: items.indexOf(item) };
+}
 
 function checkItem(item, phaseNum, idx) {
   if (item.classList.contains('checked')) return false;
@@ -2606,8 +2607,6 @@ function importFromMod(jsonData, opts) {
 
     let imported = 0;
     let unmapped = 0;
-    // Mod tasks with no representative HTML item; not counted as unmapped.
-    const OMITTED = new Set(['p4_steel_research', 'p4_smelt_steel', 'p13_kovarex']);
 
     for (const [phaseId, phaseData] of Object.entries(data.phases)) {
       // Map mod phase_id (e.g. "phase_1") to HTML phase number (e.g. "1")
@@ -2616,17 +2615,19 @@ function importFromMod(jsonData, opts) {
       if (!phaseCard) continue;
 
       const checklistItems = phaseCard.querySelectorAll('.checklist-item');
-      const taskMap = MOD_TASK_MAP[phaseId] || {};
 
       if (phaseData.tasks) {
         for (const [taskId, done] of Object.entries(phaseData.tasks)) {
           if (!done) continue;
-          const idx = taskMap[taskId];
-          if (idx === undefined || idx < 0 || idx >= checklistItems.length) {
-            if (!OMITTED.has(taskId)) unmapped++;
+          // Search the whole document: a few mod tasks are represented by an
+          // item in a neighbouring phase card (e.g. Kovarex).
+          const item = document.querySelector('[data-task-id~="' + taskId + '"]');
+          if (!item) {
+            if (!OMITTED_MOD_TASKS.has(taskId)) unmapped++;
             continue;
           }
-          if (checkItem(checklistItems[idx], phaseNum, idx)) imported++;
+          const loc = locateItem(item);
+          if (loc && checkItem(item, loc.phaseNum, loc.idx)) imported++;
         }
       }
 
@@ -2645,7 +2646,7 @@ function importFromMod(jsonData, opts) {
       resultEl.textContent = imported + ' task(s) imported successfully' +
         (data.player ? ' (player: ' + data.player + ')' : '') + '.' +
         (unmapped ? ' Warning: ' + unmapped + ' completed mod task(s) had no ' +
-          'matching guide item - the task map may be out of date.' : '');
+          'matching data-task-id in the guide - the tags may be out of date.' : '');
     }
     return imported;
   } catch (err) {

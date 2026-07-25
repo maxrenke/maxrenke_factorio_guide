@@ -9,6 +9,10 @@ $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $modDir = Join-Path $root "mod"
 
+# Gate: every trigger name in phases.lua must resolve in the vanilla base data.
+& (Join-Path $root "validate-phases.ps1")
+if ($LASTEXITCODE -ne 0) { throw "validate-phases.ps1 failed - not building." }
+
 $info = Get-Content (Join-Path $modDir "info.json") -Raw | ConvertFrom-Json
 $name = $info.name
 $version = $info.version

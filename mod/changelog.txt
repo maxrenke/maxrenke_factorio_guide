@@ -1,4 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.1.0
+Date: 2026-07-25
+  Bugfixes:
+    - Fixed four triggers that could never fire on the vanilla base game: Power Armor Mk2
+      and Personal Roboport Mk2 used Space Age technology names, and rocket control units
+      no longer exist in 2.0.
+  Changes:
+    - Phase 10 now tracks Battery Mk2 and Energy Shield Mk2 instead of the Portable Fusion
+      Reactor, which is Space Age content and not available in the base game.
+    - Phase 14 tracks the three real rocket components (processing units, low density
+      structures, rocket fuel) at the ~715 each a Prod-3 silo needs, replacing the rocket
+      control unit task and the old under-counted thresholds.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2026-05-30
   Features:

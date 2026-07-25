@@ -11,7 +11,7 @@ changelog.txt / thumbnail.png inside the uploaded zip - you do NOT retype them.
 Internal name [from zip] : vanilla-progress-guide      (PERMANENT, must be unique)
 Display title [from zip] : Vanilla Progress Guide
 Author        [from zip] : maxrenke
-Version       [from zip] : 1.0.0
+Version       [from zip] : 1.1.0
 Factorio ver. [from zip] : 2.0
 License                  : MIT
 Category                 : Helper Mods        (closest fit; also fine: Utilities)

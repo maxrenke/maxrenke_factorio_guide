@@ -121,10 +121,13 @@ local phases = {
     name = "Phase 10: Power Armor & Logistics Network",
     short_desc = "Kit out your character with endgame personal equipment",
     tasks = {
-      { id = "p10_log_system",      text = "Research Logistics System",            trigger = { type = "tech", name = "logistic-system"            } },
-      { id = "p10_power_armor",     text = "Research Power Armor Mk2",             trigger = { type = "tech", name = "power-armor-2"              } },
-      { id = "p10_personal_rob",    text = "Research Personal Roboport Mk2",       trigger = { type = "tech", name = "personal-roboport-mk2"     } },
-      { id = "p10_fusion",          text = "Research Fusion Reactor Equipment",    trigger = { type = "tech", name = "fusion-reactor-equipment"   } },
+      { id = "p10_log_system",      text = "Research Logistics System",            trigger = { type = "tech", name = "logistic-system"                 } },
+      { id = "p10_power_armor",     text = "Research Power Armor Mk2",             trigger = { type = "tech", name = "power-armor-mk2"                 } },
+      { id = "p10_personal_rob",    text = "Research Personal Roboport Mk2",       trigger = { type = "tech", name = "personal-roboport-mk2-equipment" } },
+      -- Base 2.0 has no portable fusion reactor (Space Age only). Battery Mk2 +
+      -- portable solar are the grid power source in the vanilla base game.
+      { id = "p10_battery_mk2",     text = "Research Battery Mk2 Equipment",       trigger = { type = "tech", name = "battery-mk2-equipment"            } },
+      { id = "p10_shield_mk2",      text = "Research Energy Shield Mk2 Equipment", trigger = { type = "tech", name = "energy-shield-mk2-equipment"     } },
     },
   },
 
@@ -171,9 +174,12 @@ local phases = {
     tasks = {
       { id = "p14_research_silo",    text = "Research Rocket Silo",                             trigger = { type = "tech",     name = "rocket-silo"                           } },
       { id = "p14_build_silo",       text = "Place a Rocket Silo",                              trigger = { type = "built",    name = "rocket-silo"                           } },
-      { id = "p14_rocket_fuel",      text = "Produce 100 rocket fuel",                          trigger = { type = "produced", name = "rocket-fuel",           count = 100 } },
-      { id = "p14_rcu",              text = "Produce 100 rocket control units",                 trigger = { type = "produced", name = "rocket-control-unit",   count = 100 } },
-      { id = "p14_lds_rocket",       text = "Produce 500 low density structures (for rocket)",  trigger = { type = "produced", name = "low-density-structure", count = 500 } },
+      -- A rocket is 100 rocket parts, each 10 processing units + 10 low density
+      -- structures + 10 rocket fuel. With 4x Productivity 3 in the silo that is
+      -- ~715 of each instead of 1000. (Rocket control units were removed in 2.0.)
+      { id = "p14_rocket_fuel",      text = "Produce 715 rocket fuel (for rocket)",             trigger = { type = "produced", name = "rocket-fuel",           count = 715 } },
+      { id = "p14_proc_units",       text = "Produce 715 processing units (for rocket)",        trigger = { type = "produced", name = "processing-unit",       count = 715 } },
+      { id = "p14_lds_rocket",       text = "Produce 715 low density structures (for rocket)",  trigger = { type = "produced", name = "low-density-structure", count = 715 } },
       { id = "p14_satellite",        text = "Craft a Satellite",                                trigger = { type = "crafted",  name = "satellite",             count = 1   } },
     },
   },
